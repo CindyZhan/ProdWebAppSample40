@@ -1,0 +1,80 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-menu-behavior/iron-menu-behavior.html">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-menu">
+  <style>
+    :host {
+      background: #fff;
+      @apply(--layout-vertical);
+      border: 1px solid #c1c1c1;
+      max-height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 5px 25px -3px rgba(0, 0, 0, 0.25);
+    }
+    :host([dark]), :host-context([dark]){
+      background: #434343;
+      border-color: #171717;
+    }
+    :host ::content px-row, :host-context([dark]) ::content px-row{
+      min-height: 40px;
+    }
+    :host ::content px-row:last-child{
+      border-bottom: 0;
+    }
+    :host ::content px-row px-column .px-column.columnWrapper{
+      padding: 0 10px;
+    }
+    :host ::content px-row .px-row.wrap ::content px-column:first-child /deep/ .columnWrapper {
+      padding-left: 15px;
+    }
+    :host ::content px-row .px-row.wrap ::content px-column:last-child /deep/ .columnWrapper {
+      padding-right: 15px;
+    }
+    :host ::content px-row iron-icon{
+      height: 18px !important;
+      width: 18px !important;
+    }
+    :host ::content px-row px-column[icon] .columnWrapper.px-column{
+      height: 18px;
+      width: 18px;
+    }
+    :host ::content px-row{
+      cursor: pointer;
+    }
+    :host ::content px-row:hover{
+      background-color: rgba(0,0,0,.05);
+    }
+    :host([dark]) ::content px-row:not([selected]):hover, :host-context([dark]) ::content px-row:not([selected]):hover{
+      background-color: rgba(0,0,0,.2);
+    }
+
+  </style>
+  <template>
+
+    <div class="selectable-content">
+      <content></content>
+    </div>
+
+  </template>
+
+  <script>
+
+  (function() {
+
+    Polymer({
+
+      is: 'px-menu',
+
+      behaviors: [
+        Polymer.IronMenuBehavior
+      ]
+
+    });
+
+  })();
+
+  </script>
+</dom-module>
+
+

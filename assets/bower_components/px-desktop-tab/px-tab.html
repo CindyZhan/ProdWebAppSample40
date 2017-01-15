@@ -1,0 +1,260 @@
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-tab">
+	<style>
+		/* Main Styling */
+		:host {
+			/*display: inline-block;
+			position: relative;
+			box-sizing: border-box;*/
+
+			max-width:180px;
+			/*width:100%;*/
+			-webkit-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+			min-height: 70px;
+			height: 70px;
+
+			background: transparent;
+			/*text-align: left;*/
+			font: inherit;
+
+			font-family: "Open Sans", sans-serif;
+			font-size: 16px;
+			font-weight: 600;
+
+			outline: none;
+			border-radius: 0px;
+
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+
+			cursor: pointer;
+			z-index: 0;
+
+			color:rgb(241,241,241);
+
+			transition:all 500ms ease-in-out;
+		}
+		:host(:hover) {
+			background: rgba(0,0,0,0.125);
+		}
+		:host([hassubtabs]){
+			display: none;
+		}
+
+
+		/* Alternate Styling */
+		:host-context([dark]), :host([dark]) {
+			color: #F1F1F1;
+		}
+		:host-context([extra]), :host([extra]){
+			width: auto;
+			-webkit-flex: none;
+			-ms-flex: none;
+			flex: none;
+			max-width: none;
+			min-height: 32px;
+			height: 32px;
+
+			padding: 0 10px;
+			font-size: 12px;
+			font-weight: 400;
+
+			border-left: 1px solid rgba(255,255,255,.35);
+			border-right: 1px solid rgba(0,0,0,.95);
+		}
+		:host-context([dark]):hover, :host([dark]:hover) {
+			background: rgba(0,0,0,0.35);
+		}
+
+		:host-context([extra]):hover, :host([extra]:hover) {
+			background: #444444;
+		}
+		:host-context([extra])[app]:hover, :host([extra][app]:hover) {
+			background: #0687c2;
+		}
+
+
+		/* Active Tab Styling */
+		:host(.active), :host([active]) {
+			background-color:#fff;
+			color:#0e6eb8;
+			box-shadow: 2px 0px 0px rgba(0,0,0,0.125), -2px 0px 0px rgba(0,0,0,0.125);
+		}
+		:host-context([dark]).active, :host-context([dark])[active],
+		:host([dark].active), :host([dark][active]) {
+			background-color:#fff;
+			color:#1f1f1f;
+			box-shadow: 2px 0px 0px rgba(0,0,0,0.125), -2px 0px 0px rgba(0,0,0,0.125);
+		}
+
+		:host-context([extra]).active, :host-context([extra])[active],
+		:host([extra].active), :host([extra][active]) {
+			background-color:#444444;
+			color:rgb(241,241,241);
+			box-shadow: 2px 0px 0px rgba(0,0,0,0.125), -2px 0px 0px rgba(0,0,0,0.125);
+		}
+
+		:host-context([extra])[app].active, :host-context([extra])[app][active],
+		:host([extra][app].active), :host([extra][app][active]) {
+			background-color:#0687c2;
+			color:rgb(241,241,241);
+			box-shadow: 2px 0px 0px rgba(0,0,0,0.125), -2px 0px 0px rgba(0,0,0,0.125);
+		}
+
+
+		/* Alarm Styling */
+		:host(.alarm), :host([alarm]) {
+			background-color:rgb(243,51,51); 
+			box-shadow: inset -2px 0px 0px rgba(0,0,0,0.125), inset 2px 0px 0px rgba(0,0,0,0.125);
+		}
+
+		:host(.alarm:hover),:host([alarm]:hover){
+			background-color: rgba(243,51,51,.85);
+		}
+
+		:host([alarm].active), :host(.alarm.active), :host([alarm][active]), :host([active].alarm)  {
+			background-color:#fff;
+			color:rgb(243,51,51);
+			box-shadow: 2px 0px 0px rgba(0,0,0,0.125), -2px 0px 0px rgba(0,0,0,0.125);
+		}
+
+
+		/* Internals Styling */
+		:host iron-icon {
+			margin-right:10px;
+			width: 22px!important;
+			height: 22px!important;
+
+			@apply(--layout-relative);
+		}
+		:host-context([extra]) iron-icon, :host([extra]) iron-icon{
+			margin-right: 5px;
+			width: 18px!important;
+			height: 18px!important;
+		}
+		:host #label, :host .sub{
+			max-width: 130px;
+			white-space:nowrap;
+			text-overflow:ellipsis;
+			overflow: hidden;
+			transition:opacity 200ms ease-in-out;
+		}
+		:host-context([extra]) #label,:host-context([extra]) .sub, 
+		:host([extra]) #label,:host([extra]) .sub{
+			max-width: none;
+		}
+		:host span.sub {
+			font-size: 12px;
+			float:left;
+			padding-top: 2px;
+		}
+		:host .button-content {
+			height: 100%;
+			width: 100%;
+			padding: 0px;
+
+			@apply(--layout-relative);
+			@apply(--layout-horizontal);
+      		@apply(--layout-center-center);
+		}
+
+		:host .text{
+			@apply(--layout-vertical);
+		}
+
+		/* Collapsed Styling */
+		:host([collapsetotext]) .button-content .text{
+			opacity: 1!important;
+			text-align: center;
+			width:76px;
+			white-space: nowrap;
+			text-overflow:ellipsis;
+		}
+
+		:host([collapsetotext]) .button-content /deep/ iron-icon{
+			transtion:all 500ms ease-in-out!important;
+			opacity: 1;
+		}
+
+		:host([collapsetotext]) .button-content /deep/ iron-icon{
+			opacity: 0;
+			width:0!important;
+			margin-right:0;
+			margin-left:0!important;
+			padding:0;
+		}
+	</style>
+  	<template>
+		<div class="button-content">
+		  <template is="dom-if" if="{{icon}}">
+			<iron-icon id="icon" icon="{{icon}}"></iron-icon>
+		  </template>
+
+		  <content select="svg"></content>
+
+		  <div class="text">
+			<span id="label"><content></content></span>
+			<template is="dom-if" if="{{subtext}}">
+			  <span class="sub">{{subtext}}</span>
+		    </template>
+		  </div>
+		</div>
+  	</template>
+
+  	<script>
+		Polymer({
+
+			is: "px-tab",
+			hostAttributes:{
+				role: "button"
+			},
+			properties:{
+				dark:{
+					type: Boolean,
+					value: false
+				},
+				extra:{
+					type: Boolean,
+					value: false
+				},
+				app:{
+					type: Boolean,
+					value: false
+				},
+				active:{
+					type: Boolean,
+					value: false
+				},
+				alarm:{
+					type: Boolean,
+					value: false
+				},
+				collapsetotext:{
+					type: Boolean,
+					value: false,
+					reflectToAttribute: true
+				},
+				icon:{
+					type: String,
+					value: null
+				},
+				subtext:{
+					type: String,
+					value: null
+				},
+				hassubtabs:{
+					type: Boolean,
+					value: false
+				}
+			}
+		});
+  	</script>
+</polymer-element>

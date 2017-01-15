@@ -1,0 +1,111 @@
+<!--
+`px-item` is a simple menu item. It displays a string value and (optional) icon.
+
+Example:
+
+    <px-menu selectable class="dropdown-content">
+        <px-item icon="apple">Apple</px-item>
+        <px-item icon="berry">Blue Raspberry</px-item>
+        <px-item>Cherry</px-item>
+    </px-menu>
+
+@group Desktop
+@element px-item
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link href="../iron-icon/iron-icon.html" rel="import">
+
+<dom-module id="px-item">
+
+
+    <template>
+        <style>
+
+            :host {
+                @apply(--layout-horizontal);
+                @apply(--layout-center);
+
+                padding: 0 15px;
+                height: 40px;
+                color: #333;
+                border-bottom: 1px solid #e5e5e5;
+
+                font-size: 14px;
+
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                outline: none;
+                cursor: pointer;
+            }
+            :host([dark]), :host-context([dark]){
+                color: #f3f3f3;
+                border-top: 1px solid #606060;
+                border-bottom:1px solid #111;
+            }
+
+            :host iron-icon{
+                width: 18px;
+                height: 18px;
+                margin-right: 10px;
+            }
+
+            :host:hover {
+                background-color: rgba(0,0,0,.05)
+            }
+            :host([dark]):hover,
+            :host-context([dark]):hover {
+                background-color: rgba(0,0,0,.2)
+            }
+
+            :host(:first-child){
+                border-top: 0;
+            }
+            :host(:last-child){
+                border-bottom: 0;
+            }
+            :host .label{
+                white-space: nowrap;
+
+            }
+
+        </style>
+
+        <template is="dom-if" if="{{icon}}"><iron-icon icon="{{icon}}" class="icon"></iron-icon></template>
+        <span class="label"><content></content></span>
+    </template>
+</dom-module>
+
+<script>
+
+(function() {
+
+  Polymer({
+
+    is: 'px-item',
+
+    hostAttributes: {
+      role: 'listitem'
+    },
+
+    properties:{
+        /**
+         *If set, the menu item text will be preceeded by the specified icon.
+         */
+        icon:{type: String, value: null},
+
+        /**
+         *If set, the item will take on darker styling, to be used in dark-colored containers.
+         */
+        dark: {type:Boolean, value: false}
+    }
+  });
+
+})();
+
+</script>

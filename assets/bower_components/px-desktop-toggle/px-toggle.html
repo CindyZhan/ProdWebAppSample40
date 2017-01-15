@@ -1,0 +1,433 @@
+<!--
+##### Example
+
+    <px-toggle></px-toggle>
+
+@element px-toggle
+@blurb px-toggle provides a switch that the user can click or slide to toggle. 
+@status alpha
+@homepage http://eatonuxd.com
+-->
+
+<!-- <link rel="import" href="../paper-radio-button/paper-radio-button.html"> -->
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+
+<dom-module id="px-toggle">
+
+    <style>
+    /* Base Styling */
+        :host{
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+
+            outline: none;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
+            cursor: pointer;
+
+            color:#606060;
+        }
+
+
+    /* Internals Styling */    
+        :host #focusWrapper{
+            box-sizing: border-box;
+            min-width: 150px;
+            width:150px;
+            height: 35px;
+
+            border:1px solid transparent;
+            overflow: hidden;
+        }
+        :host #toggleWrapper{
+            position: relative;
+
+            height: 100%;
+            width: 100%;
+            box-sizing: border-box;
+
+            border:1px solid #c1c1c1;
+
+            overflow: hidden;
+        }
+        :host #toggleSlider{
+            position: absolute;
+
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            margin-left: -1px;
+
+            overflow: visible;
+        
+            transition: transform linear .15s;
+        }
+        :host #toggleBar, :host #toggleBarChecked {
+            position: absolute;
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+
+            box-sizing: border-box;
+            height: 100%;
+            width: 147px;
+            padding: 0 0 0 31px;
+            right: -1px;
+            
+            background: #f2f2f2;
+        }
+        :host #toggleBarChecked {
+            left: -115px;
+            padding: 0 31px 0 0;
+
+            /*background: #0e6eb8;*/
+            background: #0687c2; /* Old browsers */
+            background: -moz-linear-gradient(top, #015ea1 0%, #0687c2 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#015ea1), color-stop(100%,#0687c2)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #015ea1 0%,#0687c2 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #015ea1 0%,#0687c2 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #015ea1 0%,#0687c2 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #015ea1 0%,#0687c2 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#015ea1', endColorstr='#0687c2',GradientType=0 ); /* IE6-9 */
+
+        }
+        :host #toggleButton {
+            position: absolute;
+            
+            height: 31px;
+            width: 31px;
+            margin-top: -1px;
+
+            border:1px solid #c1c1c1;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,.1) inset;
+
+            color:#606060;
+
+            background: #ffffff;
+            background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f2f2f2)); 
+            background: -webkit-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+            background: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+            background: -ms-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+            background: linear-gradient(to bottom, #ffffff 0%,#f2f2f2 100%); 
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0 );
+            
+            /* Knurling Placeholder */
+            box-sizing: border-box;
+            height: 33px;
+            width: 33px;
+            @apply(--layout-horizontal);
+            @apply(--layout-around-justified);
+            padding: 8px;
+        }
+        :host .rect{
+            width: 3px;
+            height: 100%;
+            background: #c1c1c1;
+            box-shadow: 1px 0 0 rgba(255,255,255, .15)
+        }
+        :host #disabledtext, :host #enabledtext{
+            max-width: 114px;
+            padding: 0 5px;
+
+            font-size: 14px;
+            font-weight: 600;
+            
+            white-space:nowrap;
+            overflow: hidden;
+            text-overflow:ellipsis;
+        }
+        :host #enabledtext{
+            color: #f3f3f3;
+        }
+        :host([checked]) #toggleSlider {
+            margin-left: 0;
+            margin-right: -1px;
+
+            -webkit-transform: translate3d(114px, 0, 0);
+            transform: translate3d(114px, 0, 0);
+        }
+        :host #toggleSlider.dragging{
+            transition: none;
+        }
+        :host #disabledlabel{
+            margin-right: 5px;
+        }
+        :host #enabledlabel{
+            margin-left: 5px;
+        }
+
+
+    /* Outer Label */    
+        :host([outerlabels]) #focusWrapper{
+            box-sizing: border-box;
+            min-width: 66px;
+            width:66px;
+            height: 35px;
+        }
+        :host([outerlabels]) #toggleBar, :host([outerlabels]) #toggleBarChecked {
+            width: 62px;
+        }
+        :host([outerlabels]) #toggleBarChecked {
+            left: -31px;
+        }
+/*        :host([outerlabels]) #disabledtext, :host([outerlabels]) #enabledtext{
+            max-width: 114px;
+            padding: 0 5px;
+
+            font-size: 14px;
+            font-weight: 600;
+            
+            white-space:nowrap;
+            overflow: hidden;
+            text-overflow:ellipsis;
+        }
+        :host([outerlabels]) #enabledtext{
+            color: #f3f3f3;
+        }*/
+        :host([outerlabels][checked]) #toggleSlider {
+            margin-left: 0;
+            margin-right: -1px;
+
+            -webkit-transform: translate3d(31px, 0, 0);
+            transform: translate3d(31px, 0, 0);
+        }
+
+
+    /* Small Styling */
+        :host([small]) #focusWrapper{
+            min-width: 40px;
+            width:40px;
+            height: 20px;
+        }
+        :host([small]) #toggleBar, :host([small]) #toggleBarChecked {
+            width: 37px;
+            padding: 0 0 0 19px;
+        }
+        :host([small]) #toggleBarChecked {
+            left: -19px;
+            padding: 0 19px 0 0;
+        }
+        :host([small]) #toggleButton {
+            position: absolute;
+            
+            height: 20px;
+            width: 10px;
+
+            /* Knurling Placeholder */
+            height: 19px;
+            width: 19px;
+            padding: 2px;
+        }
+        :host([small][checked]) #toggleSlider {
+            margin-left: 0;
+            margin-right: -1px;
+
+            -webkit-transform: translate3d(18px, 0, 0);
+            transform: translate3d(18px, 0, 0);
+        }
+        :host([small]) #enabledtext, :host([small]) #disabledtext, :host([small]) .rect{
+            display: none;
+        }
+
+
+    /* Round Styling */
+/*        :host([round]) #toggleButton{
+            border-radius: 50%;
+        }
+        :host([round]) #focusWrapper, :host([round]) #toggleWrapper{
+            opacity: .99;
+        }
+        :host([round]) #focusWrapper, :host([round]) #toggleWrapper, :host([round]) #toggleBar, :host([round]) #toggleBarChecked{
+            border-radius: 30px;  
+        }*/
+          
+
+    /* Dark Styling */
+        :host([dark]) #toggleButton,
+        :host-context([dark]) #toggleButton{
+            background: #545454; /* Old browsers */
+            background: -moz-linear-gradient(top,  #545454 0%, #333333 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#545454), color-stop(100%,#333333)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #545454 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #545454 0%,#333333 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #545454 0%,#333333 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #545454 0%,#333333 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#545454', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+
+            border-color:#161616;
+        }
+        :host([dark]) #toggleWrapper,
+        :host-context([dark]) #toggleWrapper {
+            border-color:#161616;
+        }
+        :host([dark]) #toggleBar,
+        :host-context([dark]) #toggleBar {
+            background: #1f1f1f;
+        }
+        :host([dark]) #disabledtext,
+        :host-context([dark]) #disabledtext {
+            color: #f3f3f3;
+        }
+        :host([dark]) #disabledlabel, :host([dark]) #enabledlabel,
+        :host-context([dark]) #disabledlabel, :host-context([dark]) #enabledlabel{
+            color: #f3f3f3;
+        }
+        :host([dark]) .rect,
+        :host-context([dark]) .rect{
+            background: #1f1f1f;
+        }
+
+    /* Focus Styling */
+        :host(:focus) #toggleWrapper, :host(:focus) #focusWrapper{
+            border-color: #0e6eb8;
+        }
+        :host(:focus) #focusWrapper{
+            box-shadow: inset 0px 0px 10px rgba(2, 111, 190, .125), 0px 0px 25px rgba(2, 111, 190, .25);
+            /*z-index: 2;*/
+        }
+
+
+    /* Disabled Styling */
+        :host([disabled]) {
+            opacity: .35;
+            cursor: auto;
+            pointer-events: none;
+        }
+
+    </style>
+
+    <template>
+        <template is="dom-if" if="{{or(outerlabels,small)}}">
+            <div id="disabledlabel"><span>{{disabledtext}}</span></div>
+        </template>
+        <div id="focusWrapper">
+            <div id="toggleWrapper">
+                <div id="toggleSlider">
+                    <div id="toggleBar" class="toggle toggle-bar">
+                        <template is="dom-if" if="{{!outerlabels}}">
+                            <template is="dom-if" if="{{disabledtext}}">
+                                <div id="disabledtext">{{disabledtext}}</div>
+                            </template>
+                        </template>
+                    </div>
+                    <div id="toggleBarChecked" class="toggle toggle-bar">
+                        <template is="dom-if" if="{{!outerlabels}}">
+                            <template is="dom-if" if="{{enabledtext}}">
+                                <div id="enabledtext">{{enabledtext}}</div>
+                            </template>
+                        </template>
+                    </div>
+                    <div id="toggleButton" class="toggle toggle-button"><div class="rect"></div><div class="rect"></div><div class="rect"></div></div>
+                </div>
+            </div>
+        </div>
+        <template is="dom-if" if="{{or(outerlabels,small)}}">
+            <div id="enabledlabel"><span>{{enabledtext}}</span></div>
+        </template>
+
+        <iron-media-query
+        query="{{mq}}"
+        query-matches="{{stack}}">
+        </iron-media-query>
+    </template>
+
+    <script>
+        Polymer({
+            is:'px-toggle',
+            hostAttributes:{
+                tabindex: 0,
+                role: "button",
+                'aria-pressed': 'false'
+            },
+            properties:{
+                disabled: {
+                    type:Boolean, 
+                    value:false
+                },
+                mq:{
+                    type: String, 
+                    value:"(max-width:320px)"
+                },
+                enabledtext: {
+                    type:String, 
+                    value: null
+                },
+                disabledtext: {
+                    type:String, 
+                    value: null
+                },
+                checked: {
+                    type:Boolean, 
+                    value:false, 
+                    reflectToAttribute:true
+                },
+                outerlabels:{
+                    type: Boolean,
+                    value: false
+                },
+                small:{
+                    type: Boolean,
+                    value: false
+                }
+            },
+            listeners: {
+                up: 'upAction',
+                tap: 'tap',
+                track: 'track'
+            },
+            or: function(v1,v2){
+                return v1 || v2;
+            },
+            upAction: function(e) {
+                this.blur();
+            },
+
+            tap: function() {
+                if (this.disabled) {
+                    return;
+                }
+                this.checked = !this.checked;
+                this.fire('change');
+            },
+            track: function(e){
+                if (this.disabled) { return; }
+
+                switch(e.detail.state){
+                    case 'start':
+                        this._w = this.$.toggleBar.offsetWidth-this.$.toggleButton.offsetWidth;
+                        // e.preventTap(); This feature is not yet implemented in Polymer 1.0
+                        break;
+                    case 'track':
+                        this._x = Math.min(this._w-5, Math.max(7, this.checked ? this._w + e.detail.dx : e.detail.dx));
+                        // console.log("THISX: "+this._x);
+                        this.$.toggleSlider.classList.add('dragging');
+                        var s =  this.$.toggleSlider.style;
+                        // s.webkitTransform = s.transform = 'translate3d(' + this._x + 'px,0,0)';
+                        s.transform = 'translate3d(' + this._x + 'px,0,0)';
+                        break;
+                    case 'end':
+                        var s =  this.$.toggleSlider.style;
+                        // s.transform = s.webkitTransform = '';
+                        s.transform = '';
+                        this.$.toggleSlider.classList.remove('dragging');
+                        var old = this.checked;
+                        //check if the toggle button is closer to the right or the left
+                        this.checked = Math.abs(this.$.toggleBar.offsetWidth-this._x-this.$.toggleButton.offsetWidth) < Math.abs(this._x);
+                        if (this.checked !== old) {
+                            this.fire('change');
+                        }
+                        break;
+                }
+            },
+            checkedChanged: function() {
+                this.setAttribute('aria-pressed', Boolean(this.checked));
+                this.fire('core-change');
+            }
+        });
+    </script>
+</dom-module>

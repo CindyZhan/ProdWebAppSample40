@@ -1,0 +1,15 @@
+{
+    "name": "px-icons",
+    "version": "0.0.1",
+    "description": "Icons for Power Xpert Blue. Contains most icons used throughout our software",
+    "homepage": "eatonuxd.com,"
+    "author": "Eric Atha <ericatha@eaton.com>",
+    "ignore": [
+        "/.*",
+        "/tests/"
+    ],
+    "dependencies": {
+        "polymer": "Polymer/polymer#^1.0.0",
+        "iron-iconset-svg": "Polymer/iron-iconset-svg#^0.5"
+    }
+}

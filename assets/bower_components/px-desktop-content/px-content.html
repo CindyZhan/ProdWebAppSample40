@@ -1,0 +1,106 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-icons/iron-icons.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+
+
+<dom-module id="px-content">
+    <style>
+    /* Base Styling */
+        :host {
+            display: block;
+            padding: 15px 25px;
+            font-size: 14px;
+            color:#606060;
+        }
+        :host([nopadding]) {
+            padding:0;
+        }
+        :host([nosidepadding]){
+            padding-left: 0;
+            padding-right: 0;
+        }
+        :host([bucket]) {
+            background-color:#f3f3f3;
+            border-top:1px solid #c1c1c1;
+            color:#606060;
+        }
+        :host([dark]), 
+        :host-context([dark]) {
+            color:#f3f3f3;
+        }
+        :host([bucket][dark]),
+        :host-context([dark])[bucket]{
+            background-color:#333;
+            border-top:1px solid #171717;
+            color:#f3f3f3;
+        }
+
+
+    /* Internals Styling */    
+        ::content p {
+            font-size: 14px;
+        }
+        :host([bucket]) ::content px-row{
+            font-size: 14px;
+            padding: 25px 0;
+        }
+        :host([bucket]) ::content px-row:last-child(){
+            border-bottom: 0px;
+        }
+        :host([borderlessrows]) ::content px-row{
+            border-bottom:0px;
+        }
+
+
+    /* Scrollbar Styling */
+/*        :host-context([dark])::-webkit-scrollbar-track{
+            background: #373737!important;
+        }
+        :host-context([dark])::-webkit-scrollbar-thumb{
+            background: #515151 url('images/scroll-thumb-dark.png') no-repeat center center!important ;
+        }
+        :host-context([dark])::-webkit-scrollbar-thumb:horizontal {
+            background: #515151 url('images/scroll-thumb-horz-dark.png') no-repeat center center!important;
+        }*/
+        
+
+    </style>
+    <template>
+        <content></content>
+
+<!--         <iron-media-query
+        query="{{mq}}"
+        query-matches="{{small}}">
+        </iron-media-query> -->
+    </template>
+
+
+    <script>
+        Polymer({
+            is: "px-content",
+            properties:{
+                mq:{
+                    type: String,
+                    value: "(max-width: 800px)"
+                },
+                bucket:{
+                    type: Boolean,
+                    value: false
+                },
+                nopadding:{
+                    type: Boolean,
+                    value: false
+                },
+                borderlessrows:{
+                    type: Boolean,
+                    value: false
+                },
+                dark:{
+                    type: Boolean,
+                    value: false
+                }
+            }
+        });
+    </script>
+</dom-module>

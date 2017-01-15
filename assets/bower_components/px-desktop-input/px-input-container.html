@@ -1,0 +1,427 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-styles/paper-styles.html">
+
+<dom-module id="px-input-container">
+    <style>
+        /* Base Styling */
+            :host{
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+
+                outline: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+
+                height: 35px;
+                min-height: 35px;
+                min-width: 35px;
+                width: 100%;
+            }
+
+        /* Internals Styling */
+            :host #outerWrapper{
+                height: 100%;
+                width: 100%;
+                box-shadow: 0 2px 6px rgba(0,0,0,.1) inset, 0 1px 0 rgba(0,0,0,0.05);
+                border:1px solid #c1c1c1;
+                background: #fff;
+            }
+            :host([dark]) #outerWrapper, :host-context([dark]) #outerWrapper{
+                background: #1f1f1f;
+                border-color: #161616;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.1) inset, 0 1px 6px rgba(0,0,0,0.05);
+            }
+            :host #outerWrapper.focused{
+                border-color: #0e6eb8;
+                box-shadow: 0 2px 6px rgba(0,0,0,.1) inset, 0px 0px 25px rgba(2, 111, 190, .25);
+                z-index: 2;
+            }
+            :host #outerWrapper.invalid{
+                border-color: #f33333;
+                box-shadow: 0 2px 6px rgba(0,0,0,.1) inset, 0px 0px 25px rgba(241, 51, 51, .25);
+                z-index: 2;
+            }
+
+            :host #focusWrapper{
+                height: 100%;
+                width: 100%;
+                min-width: 100%;
+                background: transparent;
+
+                box-sizing: border-box;
+                border: 1px solid transparent;
+            }
+            :host #focusWrapper.focused{
+                border-color: #0e6eb8;
+            }
+            :host #focusWrapper.invalid{
+                border-color: #f33333;
+            }
+
+            :host .input-container{
+                width:100%;
+                height: 100%;
+                position: relative;
+            }
+            :host .input-container ::content input{
+                box-sizing: border-box;
+                outline: none;
+                border-radius: 0px;
+                padding: 0 10px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+                color: #333;
+                width:100%;
+                height: 100%;
+                border: none;
+                background: transparent;
+            }
+            :host([dark]) .input-container ::content input, :host-context([dark]) .input-container ::content input{
+                color: #f3f3f3;
+            }
+
+        /* Extras Styling */
+
+            :host([prefix]) .input-container ::content input{
+                padding-left: 20px;
+            }
+            :host([suffix]) .input-container ::content input{
+                padding-right: 20px;
+            }
+            :host .prefix, :host .suffix{
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                opacity: .55;
+            }
+            :host .prefix{
+                left: 5px;
+            }
+            :host .suffix{
+                right: 5px;
+                font-style: italic;
+            }
+            :host([rightalign]) .input-container ::content input{
+                text-align: right;
+            }
+    </style>  
+
+    <template>
+        <div id="outerWrapper" class$="[[_computeFocusedInvalidClass(focused,invalid)]]">
+            <div id="focusWrapper" class$="[[_computeFocusedInvalidClass(focused,invalid)]]">
+                <div class="input-container">
+                    <content select="input"></content>
+                    <template is="dom-if" if="[[prefix]]">
+                        <div class="prefix">[[prefix]]</div>
+                    </template>
+                    <template is="dom-if" if="[[suffix]]">
+                        <div class="suffix">[[suffix]]</div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'px-input-container',
+
+            properties: {
+
+                /**
+                * The attribute to listen for value changes on.
+                */
+                attrForValue: {
+                    type: String,
+                    value: 'bind-value'
+                },
+
+                /**
+                * Set to true to auto-validate the input value when it changes.
+                */
+                autoValidate: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                * True if the input is invalid. This property is set automatically when the input value
+                * changes if auto-validating, or when the `iron-input-valid` event is heard from a child.
+                */
+                invalid: {
+                    observer: '_invalidChanged',
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                * True if the input has focus.
+                */
+                focused: {
+                    readOnly: true,
+                    type: Boolean,
+                    value: false,
+                    notify: true
+                },
+
+                prefix:{
+                    type: String,
+                    value: null,
+                    reflectToAttribute: true
+                },
+                suffix:{
+                    type: String,
+                    value: null,
+                    reflectToAttribute: true
+                },
+                rightAlign:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+
+                _addons: {
+                    type: Array
+                    // do not set a default value here intentionally - it will be initialized lazily when a
+                    // distributed child is attached, which may occur before configuration for this element
+                    // in polyfill.
+                },
+
+                _inputHasContent: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _inputSelector: {
+                    type: String,
+                    value: 'input,textarea,.paper-input-input'
+                },
+
+                _boundOnFocus: {
+                    type: Function,
+                    value: function() {
+                        return this._onFocus.bind(this);
+                    }
+                },
+
+                _boundOnBlur: {
+                    type: Function,
+                    value: function() {
+                        return this._onBlur.bind(this);
+                    }
+                },
+
+                _boundOnInput: {
+                    type: Function,
+                    value: function() {
+                        return this._onInput.bind(this);
+                    }
+                },
+
+                _boundValueChanged: {
+                    type: Function,
+                    value: function() {
+                        return this._onValueChanged.bind(this);
+                    }
+                }
+            },
+
+            listeners: {
+                'addon-attached': '_onAddonAttached',
+                'iron-input-validate': '_onIronInputValidate'
+            },
+
+            get _valueChangedEvent() {
+                return this.attrForValue + '-changed';
+            },
+
+            get _propertyForValue() {
+                return Polymer.CaseMap.dashToCamelCase(this.attrForValue);
+            },
+
+            get _inputElement() {
+                return Polymer.dom(this).querySelector(this._inputSelector);
+            },
+
+            get _inputElementValue() {
+                return this._inputElement[this._propertyForValue] || this._inputElement.value;
+            },
+
+            ready: function() {
+                if (!this._addons) {
+                    this._addons = [];
+                }
+                this.addEventListener('focus', this._boundOnFocus, true);
+                this.addEventListener('blur', this._boundOnBlur, true);
+                if (this.attrForValue) {
+                    this._inputElement.addEventListener(this._valueChangedEvent, this._boundValueChanged);
+                } else {
+                    this.addEventListener('input', this._onInput);
+                }
+            },
+
+            attached: function() {
+                // Only validate when attached if the input already has a value.
+                if (this._inputElementValue != '') {
+                    this._handleValueAndAutoValidate(this._inputElement);
+                } else {
+                    this._handleValue(this._inputElement);
+                }
+            },
+
+            _onAddonAttached: function(event) {
+                if (!this._addons) {
+                    this._addons = [];
+                }
+                var target = event.target;
+                if (this._addons.indexOf(target) === -1) {
+                    this._addons.push(target);
+                    if (this.isAttached) {
+                        this._handleValue(this._inputElement);
+                    }
+                }
+            },
+
+            _onFocus: function() {
+                this._setFocused(true);
+            },
+
+            _onBlur: function() {
+                this._setFocused(false);
+                this._handleValueAndAutoValidate(this._inputElement);
+            },
+
+            _onInput: function(event) {
+                this._handleValueAndAutoValidate(event.target);
+            },
+
+            _onValueChanged: function(event) {
+                this._handleValueAndAutoValidate(event.target);
+            },
+
+            _handleValue: function(inputElement) {
+                var value = this._inputElementValue;
+
+                // type="number" hack needed because this.value is empty until it's valid
+                if (value || value === 0 || (inputElement.type === 'number' && !inputElement.checkValidity())) {
+                    this._inputHasContent = true;
+                } else {
+                    this._inputHasContent = false;
+                }
+
+                this.updateAddons({
+                    inputElement: inputElement,
+                    value: value,
+                    invalid: this.invalid
+                });
+            },
+
+            _handleValueAndAutoValidate: function(inputElement) {
+                if (this.autoValidate) {
+                    var valid;
+                    if (inputElement.validate) {
+                        valid = inputElement.validate(this._inputElementValue);
+                    } else {
+                        valid = inputElement.checkValidity();
+                    }
+                    this.invalid = !valid;
+                }
+
+                // Call this last to notify the add-ons.
+                this._handleValue(inputElement);
+            },
+
+            _onIronInputValidate: function(event) {
+                this.invalid = this._inputElement.invalid;
+            },
+
+            _invalidChanged: function() {
+                if (this._addons) {
+                    this.updateAddons({invalid: this.invalid});
+                }
+            },
+
+            /**
+            * Call this to update the state of add-ons.
+            * @param {Object} state Add-on state.
+            */
+            updateAddons: function(state) {
+                for (var addon, index = 0; addon = this._addons[index]; index++) {
+                    addon.update(state);
+                }
+            },
+
+            _computeInputContentClass: function(noLabelFloat, alwaysFloatLabel, focused, invalid, _inputHasContent) {
+                var cls = 'input-content';
+                if (!noLabelFloat) {
+                    var label = this.querySelector('label');
+
+                    if (alwaysFloatLabel || _inputHasContent) {
+                        cls += ' label-is-floating';
+                        if (invalid) {
+                            cls += ' is-invalid';
+                        } else if (focused) {
+                            cls += " label-is-highlighted";
+                        }
+                        // The label might have a horizontal offset if a prefix element exists
+                        // which needs to be undone when displayed as a floating label.
+                        if (this.$.prefix && label && label.offsetParent && Polymer.dom(this.$.prefix).getDistributedNodes().length > 0) {
+                            label.style.left = -label.offsetParent.offsetLeft + 'px';
+                        }
+                    } else {
+                        // When the label is not floating, it should overlap the input element.
+                        if (label) {
+                            label.style.left = 0;
+                        }
+                    }
+                } else {
+                    if (_inputHasContent) {
+                        cls += ' label-is-hidden';
+                    }
+                }
+                return cls;
+            },
+
+            _computeUnderlineClass: function(focused, invalid) {
+                var cls = 'underline';
+                if (invalid) {
+                    cls += ' is-invalid';
+                } else if (focused) {
+                    cls += ' is-highlighted'
+                }
+                return cls;
+            },
+
+            _computeAddOnContentClass: function(focused, invalid) {
+                var cls = 'add-on-content';
+                if (invalid) {
+                    cls += ' is-invalid';
+                } else if (focused) {
+                    cls += ' is-highlighted'
+                }
+                return cls;
+            },
+
+            _computeFocusedInvalidClass: function(focused,invalid){
+                var cls="";
+                if (focused){cls+="focused";}
+                if (invalid){cls+=" invalid";}
+                return cls;
+            }
+        });
+    </script>
+</dom-module>
+
+

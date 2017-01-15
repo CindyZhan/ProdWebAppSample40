@@ -1,0 +1,247 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-icons/iron-icons.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+
+
+<dom-module id="px-row">
+	<style>
+		/* Base Styling */
+		:host{
+			border-bottom: 1px solid #e5e5e5;
+			min-height: 45px;
+
+			@apply(--layout-horizontal);
+			@apply(--layout-center);
+
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			cursor: default;
+
+			transition:background 200ms ease-in-out;
+			
+			color:#333;
+		}
+		:host([settings]), :host-context([settings]){
+			min-height: 68px;
+		}
+		:host([header]){
+            background: #e6e6e6; /* Old browsers */
+            background: -moz-linear-gradient(top, #e6e6e6 0%, #d0d0d0 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e6e6e6), color-stop(100%,#d0d0d0)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #e6e6e6 0%,#d0d0d0 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #e6e6e6 0%,#d0d0d0 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #e6e6e6 0%,#d0d0d0 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #e6e6e6 0%,#d0d0d0 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6e6e6', endColorstr='#d0d0d0',GradientType=0 ); /* IE6-9 */
+            color: #606060;
+            min-height: 35px;
+            height: 35px;
+            border: 0px;
+		}
+		:host([noborder]){
+			border: 0;
+		}
+		:host .wrap{
+			@apply(--layout-horizontal);
+			@apply(--layout-center);
+
+			-webkit-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+		}
+		:host .wrap ::content px-column:first-child /deep/ .columnWrapper {
+			padding-left: 25px;
+		}
+		:host .wrap ::content px-column:last-child /deep/ .columnWrapper {
+			padding-right: 25px;
+		}
+
+	   	:host-context([dark]), :host([dark]) {
+	   		min-height: 0;
+	   		border-top: 1px solid #606060;
+			border-bottom:1px solid #111;
+			color: #f3f3f3;
+		}
+		:host([selected]), :host([placeholder]) {
+			background-color: #333;
+			color:#f3f3f3;
+		}
+		:host([placeholder]) {
+			min-height: 35px;
+		}
+		:host([indent]){
+			padding-left:40px;
+			background-color: rgba(0,0,0,.02)
+		}
+		:host([selectable]),
+		:host-context([selectable]){
+			cursor: pointer;
+		}
+		:host([selectable]):not([selected]):hover,
+		:host-context([selectable]):not([selected]):hover {
+			background-color: rgba(0,0,0,.05)
+		}
+
+
+		/* Row statuss */
+		:host([status="callout"]){
+			box-shadow:inset 8px 0 0 #0e6eb8;
+		}
+		:host([status="alarm"]){
+			box-shadow:inset 8px 0 0 #F33333;
+		}
+		:host([status="disabled"]){
+			box-shadow:inset 8px 0 0 #983FEF;
+		}
+		:host([status="disarmed"]){
+			box-shadow:inset 8px 0 0 #1569E5;
+		}
+		:host([status="comm"]){
+			box-shadow:inset 8px 0 0 #FC7700;
+		}
+
+		:host([status="callout"]) .stripe-surrogate{
+			background-color: #0e6eb8;
+		}
+		:host([status="alarm"]) .stripe-surrogate{
+			background-color: #F33333;
+		}
+		:host([status="disabled"]) .stripe-surrogate{
+			background-color: #983FEF;
+		}
+		:host([status="disarmed"]) .stripe-surrogate{
+			background-color: #1569E5;
+		}
+		:host([status="comm"]) .stripe-surrogate{
+			background-color: #FC7700;
+		}
+
+
+		/* Row Text/Icon Colors */
+		:host([status="alarm"]):not([selected]) ::content px-column[title], 
+		:host([status="alarm"]):not([selected]) ::content px-column[icon],
+		:host([status="alarm"]):not([selected]) ::content px-column[title][color] strong {
+			color:#F33333;
+		}
+		:host([status="disabled"]):not([selected]) ::content px-column[title],
+		:host([status="disabled"]):not([selected]) ::content px-column[title][color] strong {
+			color:#983FEF;
+		}
+		:host([status="disarmed"]):not([selected]) ::content px-column[title],
+		:host([status="disarmed"]):not([selected]) ::content px-column[title][color] strong {
+			color:#1569E5;
+		}
+		:host([status="comm"]):not([selected]) ::content px-column[title],
+		:host([status="comm"]):not([selected]) ::content px-column[title][color] strong {
+			color:#FC7700;
+		}
+		:host([status]):not([selected]) ::content px-column[title][color] {
+			color: inherit !important;
+		}
+		:host([status]) ::content px-column([title]) {
+			font-weight: 700;
+		}
+		:host .stripe-surrogate {
+			display: none;
+			width: 8px;
+			min-height: 70px;
+		}
+
+
+		/* Stacking Styles */
+		:host([stacked][header]){
+			display: none
+		}
+		:host([stacked]) .wrap ::content px-column{
+			width:100%!important;
+			-webkit-flex-grow:1!important;
+			-ms-flex-positive:1!important;
+			flex-grow:1!important;
+			/*padding: 5px 0px;*/
+		}
+		:host([stacked]) .wrap ::content px-column /deep/ .columnWrapper{
+			padding: 5px 0px;
+		}
+		:host([stacked]) .wrap ::content px-column[helper],
+		:host([stacked]) .wrap ::content px-column[action],
+		:host([stacked]) .wrap ::content px-column[value],
+		:host([stacked]) .wrap ::content px-column[right]{
+			text-align: left;
+		}
+		:host([stacked]) .wrap ::content px-column[helper] /deep/ iron-icon{
+			display: inline-block!important;
+		}
+		:host([stacked]) .wrap ::content px-column[label] /deep/ .columnWrapper{
+			font-weight: 800;
+			padding-bottom:4px;
+		}
+		:host([stacked]) .wrap {
+			@apply(--layout-vertical);
+			padding: 10px 25px;
+		}
+	</style>
+	<template>
+
+
+		<!-- status surrogate is used when box-shadow cannot be used (when container has its own internal padding, like px-card). Must display:block and position the div in the parent element. -->
+		<template is="dom-if" if="{{status}}">
+			<div class="stripe-surrogate"></div>
+		</template>
+
+		<div class="wrap"><content select="px-column"></content></div>
+
+		<content></content>
+
+		<iron-media-query
+		query="{{mq}}"
+		query-matches="{{stacked}}">
+		</iron-media-query>
+
+	</template>
+
+
+	<script>
+		Polymer({
+			is: "px-row",
+			properties:{
+				mq:{
+					type: String,
+					value: "(max-width: 800px)"
+				},
+				selected:{
+					type: Boolean,
+					value: false
+				},
+				status:{
+					type: String,
+					value: null
+				},
+				stacked:{
+					type: Boolean,
+					value: false,
+					reflectToAttribute: true
+				},
+				noborder:{
+					type: Boolean,
+					value: false
+				},
+				dark:{
+					type: Boolean,
+					value: false
+				},
+				indent:{
+					type: Boolean,
+					value: false
+				},
+				settings:{
+					type: Boolean,
+					value: false
+				}
+			}
+		});
+	</script>
+</dom-module>

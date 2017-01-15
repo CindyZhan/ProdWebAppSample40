@@ -1,0 +1,361 @@
+<!--
+`px-dropdown` is an input that allows the user to choose from a specified list of options.
+
+Example:
+
+    <px-dropdown placeholder="Select fruit..." value="{{selectedValue}}">
+        <px-item value="apple">Apple</px-item>
+        <px-item value="raspberry">Blue Raspberry</px-item>
+        <px-item value="cherry">Cherry</px-item>
+    </px-dropdown>
+
+@group Desktop
+@element px-dropdown
+@hero hero.svg
+@demo demo/index.html
+-->
+
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-behaviors/iron-control-state.html">
+<link rel="import" href="../iron-behaviors/iron-button-state.html">
+<link rel="import" href="../iron-selector/iron-selectable.html">
+
+<link rel="import" href="px-menu-container.html">
+<link rel="import" href="px-dropdown-button.html">
+
+<link rel="import" href="../px-desktop-menu/px-menu.html">
+<link rel="import" href="../px-desktop-item/px-item.html">
+<link rel="import" href="../px-desktop-input/px-input.html">
+<link rel="import" href="../px-desktop-button/px-button.html">
+<link rel="import" href="../px-icons/px-icons.html">
+
+<dom-module id="px-dropdown">
+    <template>
+        <style>
+            :host {
+                display: inline-block;
+                position: relative;
+                text-align: left;
+                cursor: pointer;
+                min-width: 0;
+            }
+            :host([readonly]){
+                cursor: default;
+                pointer-events: none;
+            }
+
+        </style>
+
+        <template is="dom-if" if="{{!readonly}}">
+            <px-menu-container
+            id="menuButton"
+            disabled="[[disabled]]" 
+            textboxstyle="[[textboxstyle]]" 
+            on-iron-select="_onIronSelect"
+            opened="{{opened}}">
+                <template is="dom-if" if="{{textboxstyle}}">
+                    <px-input
+                    disabled$="[[disabled]]"
+                    value$="[[value]]"
+                    placeholder$="[[placeholder]]"></px-input>
+                    <div class="dropdown-trigger">
+                        <px-button icon="px-icons:up-down" small disabled$="[[disabled]]"></px-button>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{!textboxstyle}}">
+                    <div class="dropdown-trigger">
+                        <px-dropdown-button disabled$="[[disabled]]">[[selectedItemLabel]]</px-dropdown-button>
+                    </div>
+                </template>
+                <px-menu selectable class="dropdown-content">
+                    <content id='firstcontent' select='*[first]'></content>
+                    <template id="itemRepeat" is="dom-repeat" items="[[itemsArray]]">
+                        <px-item value="[[item.value]]">[[item.label]]</px-item>
+                    </template>
+                    <content id='content'></content>
+                </px-menu>
+            </px-menu-container>
+        </template>
+        <template is="dom-if" if="{{readonly}}">
+            <span>[[selectedItemLabel]]</span>
+        </template>
+    </template>
+</dom-module>
+
+<script>
+    (function() {
+        'use strict';
+
+        Polymer({
+            is: 'px-dropdown',
+
+            hostAttributes: {
+                role: 'group',
+                'aria-haspopup': 'true'
+            },
+
+            behaviors: [
+                Polymer.IronControlState,
+                Polymer.IronButtonState
+            ],
+
+            listeners: {
+                'tap': '_onTap'
+            },
+
+            keyBindings: {
+                'up down': 'open',
+                'esc': 'close'
+            },
+
+            /**
+            * Update items whenever either the items or the value changes
+            */
+            observers: [
+            '_itemsChanged(items.*)',
+            '_itemsChanged(compare)',
+            '_itemSelected(equals)'
+            ],
+
+            properties: {
+
+                /**
+                * Optional. A list of items to populate the dropdown.
+                * If it is an array, the labels and values are the items in the array.
+                * If it is an object, the keys are the labels and the values are the object's values.
+                */
+                items: {type: Object},
+
+                /**
+                * The key used to label the item if the selectable item is an object.
+                * For example, if an item is {name: 'John Smith', id: 7, email: 'johnsmith@eaton.com'},
+                *   labelKey='name' would yield the label 'John Smith'.
+                */
+                labelKey: {type: Object},
+
+                /**
+                * The key used for the value of the item if the selectable item is an object.
+                * For example, if an item is {name: 'John Smith', id: 7, email: 'johnsmith@eaton.com'},
+                *   valueKey='id' would yield the value 7.
+                */
+                valueKey: {type: Object},
+
+                /**
+                * Represents the currently selected value in the dropdown.
+                */
+                value: {
+                    type: Object,
+                    notify: true,
+                    value: null,
+                    observer: '_itemSelected'
+                },
+
+                /**
+                * The label for the currently selected item. Also used for the user-entered value.
+                */
+                selectedItemLabel: {type: String, value:null, notify: true},
+
+                /**
+                 *If set, the text that appears on the dropdown prior to any selection.
+                 */
+                placeholder: { type: String, value: null},
+
+                /**
+                * True if the dropdown is open. Otherwise, false.
+                */
+                opened: {
+                    type: Boolean,
+                    notify: true,
+                    value: false
+                },
+
+                /**
+                * If set, allows a value to be entered by the user.
+                */
+                textboxstyle:{type: Boolean, value: false},
+
+                /**
+                * If set, prevents selection; i.e. makes the dropdown values action-only
+                */
+                action: {type: Boolean, value: false},
+
+                /**
+                *If set, the dropdown will appear grayed out and will not accept user inputs.
+                */
+                disabled: {type: Boolean, value: false},
+
+                /**
+                *If set, the currently selected value will be drawn as a single line of text that does not accept user input.
+                */
+                readonly: {type: Boolean, value: false},
+
+                /**
+                * Sorts the list of items given, as if an array. Each item has the keys `label` and `value`.
+                */
+                compare: {type: Function, value: undefined},
+
+                /**
+                * Used to determine if two objects as equal, for the purposes of selection
+                */
+                equals: {type: Function, value: undefined}
+
+            },
+
+            ready: function(){
+                if (!this.value || this.value=="") {
+                    if(this.readonly){
+                        this.set('selectedItemLabel', '--');
+                    }
+                    else{
+                        this.set('selectedItemLabel', this.get('placeholder'));
+                    }
+                }
+            },
+
+            /**
+            * Show the dropdown content.
+            */
+            open: function() {
+                this.$$('#menuButton').open();
+            },
+
+            /**
+            * Hide the dropdown content.
+            */
+            close: function() {
+                this.$$('#menuButton').close();
+            },
+
+            /**
+            * Creates an array of selectable elements:
+            * [{
+            *   label: (label that is shown)
+            *   value: (value that is selected)
+            * }];
+            * 
+            * If the input items is an array, the label and value are the same.
+            * If the input items is an object, the label is the key and the value is the value.
+            */
+            _itemsChanged: function() {
+                var items = this.items;
+                var ret = [];
+                if (items instanceof Array) {
+                    for (var i = 0; i < items.length; i++) {
+                        ret[i] = {
+                                    label: this.labelKey ? items[i][this.labelKey] : items[i],
+                                    value: this.valueKey ? items[i][this.valueKey] : items[i]
+                        };
+                    }
+                } 
+                else {
+                    for (var n in items) {
+                        ret.push({
+                                    label: this.labelKey ? items[n][this.labelKey] : n,
+                                    value: this.valueKey ? items[n][this.valueKey] : items[n]
+                        });
+                    }
+                }
+
+                //Sort the items, if there is a compare function
+                if (this.compare) {
+                    ret.sort(this.compare);
+                }
+
+                this.itemsArray = ret;
+                this._itemSelected();
+            },
+
+            /**
+            * Returns true if two objects are equal, using the equals function if present
+            */
+            _equals: function(obj1, obj2) {
+                if (this.equals) {
+                    var value = this.equals(obj1, obj2);
+                    return value === 0 || value === true;
+                } 
+                else {
+                    return obj1 === obj2;
+                }
+            },
+
+            /**
+            * Updates the selected value text
+            */
+            _itemSelected: function() {
+                //Selection ignored on action
+                if (this.action) {
+                    return;
+                }
+
+                //Search our array for the selected value
+                if (this.itemsArray) {
+                    for (var i = this.itemsArray.length - 1; i >= 0; i--) {
+                        if (this._equals(this.itemsArray[i].value, this.value)) {
+                            this.set('selectedItemLabel', this.itemsArray[i].label);
+                            return;
+                        }
+                    }
+                }
+
+                //Search the content objects for the selected value
+                var nodes = Polymer.dom(this.$$('#firstcontent')).getDistributedNodes().concat(Polymer.dom(this.$$('#content')).getDistributedNodes());
+                nodes = nodes.filter(function(n) {
+                    return !!n.getAttribute;
+                });
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].hasAttribute('value') && this._equals(this.value, nodes[i].getAttribute('value'))) {
+                        this.set('selectedItemLabel', nodes[i].getAttribute('label') || nodes[i].textContent.trim());
+                        return;
+                    }
+                }
+
+                //When nothing is selected, display the placeholder text
+                if (!this.value || this.value=="") {
+                    this.set('selectedItemLabel', this.get('placeholder'));
+                } 
+                else if (this.labelKey && this.value[this.labelKey]) {
+                    // Use the labelKey, if possible
+                    this.set('selectedItemLabel', this.value[this.labelKey]);
+                } 
+                else {
+                    //Unknown, just set as the value
+                    this.set('selectedItemLabel', this.value);
+                }
+            },
+
+            /**
+            * A handler that is called when `iron-select` is fired.
+            *
+            * @param {CustomEvent} event An `iron-select` event.
+            */
+            _onIronSelect: function(event) {
+                if (!this.action) {
+                    var item;
+                    //Select the value
+                    var newValue;
+                    var model = this.$$('#itemRepeat').modelForElement(event.detail.item);
+                    if (model) {
+                        this.set('value', model.item.value);
+                    } 
+                    else {
+                        this.set('value', event.detail.item.getAttribute('value'));
+                    }
+                }
+            },
+
+            /**
+            * A handler that is called when the dropdown is tapped.
+            *
+            * @param {CustomEvent} event A tap event.
+            */
+            _onTap: function(event) {
+                if (Polymer.Gestures.findOriginalTarget(event) === this) {
+                    this.open();
+                }
+            },
+
+        });
+    })();
+</script>
+

@@ -1,0 +1,211 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+<link rel="import" href="../px-desktop-title/px-title.html">
+<link rel="import" href="../px-desktop-actionbar/px-actionbar.html">
+
+<dom-module id="px-navigation-container">
+
+    <style>
+	    :host{
+			transition: 500ms cubic-bezier(0.680, -0.25, 0.265, 1.25); /* easeInOutBack */
+			transition-timing-function: cubic-bezier(0.680, -0.25, 0.265, 1.25); /* easeInOutBack */
+			transition-property: height;
+	    }
+
+	    :host #container{
+	    	background-color: #015ea1;
+			transition: 500ms cubic-bezier(0.680, -0.25, 0.265, 1.25); /* easeInOutBack */
+			transition-timing-function: cubic-bezier(0.680, -0.25, 0.265, 1.25); /* easeInOutBack */
+			transition-property: left;
+	    }
+
+	    :host #menu-title, :host #titlebar{
+	    	display:none;
+	    }
+
+	    :host #menu-title {
+	    	padding-left:25px;
+	    }
+
+	    :host([drawer][mobile]).px-navigation-container-opened #container, :host([drawer][mobile][visible]) #container {
+	    	left:-10px;
+	    }
+
+	    :host([drawer][mobile]) #menu-title, :host([drawer][mobile]) #titlebar{
+	    	display:block;
+	    }
+
+		:host([drawer][mobile]) #container {
+			display:block;
+			position: absolute;
+			left:-260px;
+			top:0;
+			max-width:300px;
+			min-width:200px;
+			width:80%;
+			height:100vh;
+			z-index: 20;
+			box-shadow: 2px 0px 15px rgba(0,0,0,.25);
+			/*overflow: hidden;*/
+		}
+
+		:host([drawer][mobile]) #container /deep/ px-navigation{
+			max-height: 100%;
+			height: auto;
+			padding:0px;
+			@apply(--layout-vertical);
+			overflow:auto;
+
+		}
+
+		:host([drawer][mobile]) #container /deep/ px-navigation /deep/ px-tab{
+			max-width: 100%;
+			width: 100%;
+			padding-left:25px;
+		}
+
+		:host([drawer][mobile]) #container /deep/ px-navigation /deep/ px-tab /deep/ .button-content {
+			height: 100%;
+			width: 100%;
+			padding: 0px;
+
+			@apply(--layout-horizontal);
+      		@apply(--layout-start-justified);
+		}
+
+		:host([drawer][mobile]) #container /deep/ px-navigation /deep/ px-tab[extra]{
+			max-width: 100%;
+			border:0px;
+			border-top: 1px solid rgba(255,255,255,.25);
+  			border-bottom: 1px solid rgba(0,0,0,.55);
+  			padding: 20px 0px 20px 25px;
+		}
+
+		:host([drawer][mobile]) /deep/ px-navigation[extra] {
+			position:absolute;
+			bottom:0;
+			width:100%;
+		}
+
+		:host([tabbar][mobile]) /deep/ px-tab{
+
+		}
+
+		.menu-icon {
+
+		}
+
+		iron-icon {
+			cursor: pointer;
+			width: 30px!important;
+		}
+
+		#floating-menu-button {
+			left:200px;
+			position: absolute;
+		}
+
+    </style>
+
+    <template>
+<!--     	<div id="floating-menu-button">
+    		<iron-icon class="menu-icon" icon="menu"></iron-icon>
+    	</div> -->
+
+    	<div id="titlebar">
+    		<px-actionbar id="" navigation>
+	    		<iron-icon class="menu-icon" icon="menu" on-click="toggle"></iron-icon>
+	    		<span style="width:25px;"></span>
+	    		<iron-icon class="menu-icon" style="width:25px!important" icon="px-icons:networkgateway"></iron-icon>
+	    		<px-title>
+	    			<h1>Network</h1> <!-- Should be the active tab name -->
+	    		</px-title>
+	    		
+	    		
+	    	</px-actionbar>
+    	</div>
+
+    	<div id="container">
+	    	<px-actionbar id="menu-title" dark>
+	    		<px-title>
+	    			<h1>Menu</h1>
+	    		</px-title>
+	    		<span class="flex"></span>
+	    		<iron-icon class="menu-icon" icon="menu" on-click="toggle"></iron-icon>
+	    	</px-actionbar>
+	        <content></content>
+        </div>
+
+
+        <iron-media-query
+        query="{{mq}}"
+        query-matches="{{mobile}}">
+        </iron-media-query>
+
+        <iron-media-query
+        query="{{mqtablet}}"
+        query-matches="{{tablet}}">
+        </iron-media-query>
+
+    </template>
+
+    <script>
+        Polymer({
+            is:'px-navigation-container',
+            properties: {
+                tabbar:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                drawer:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                mq:{
+                    type:String,
+                    value: "(max-width: 320px)"
+                },
+                mqtablet:{
+                    type:String,
+                    value: "(max-width: 768px)"
+                },
+                mobile:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                tablet:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                opened: {
+                    type: Boolean,
+                    value: false,
+                    notify: true,
+                    observer: '_openedChanged'
+                }
+            },
+
+            toggle: function() {
+                this.opened = !this.opened;
+            },
+            show: function() {
+                this.toggleClass('px-navigation-container-closed', false);
+            },
+            hide: function() {
+                this.toggleClass('px-navigation-container-opened', false);
+            },
+            _openedChanged: function() {
+                this[this.opened ? 'show' : 'hide']();
+                this.setAttribute('aria-expanded', this.opened ? 'true' : 'false');
+                this.toggleClass('px-navigation-container-closed', !this.opened);
+                this.toggleClass('px-navigation-container-opened', this.opened);
+            }
+
+        });
+    </script>
+</dom-module>

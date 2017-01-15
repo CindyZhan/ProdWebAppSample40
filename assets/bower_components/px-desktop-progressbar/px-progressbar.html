@@ -1,0 +1,165 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-progressbar">
+    <style>
+        :host {
+            --bg-color: #0e6eb8;
+            --progress: 0;
+        }
+        :host #outerWrapper{
+            height: 20px;
+            width: 100%;
+            /*background: #f2f2f2;*/
+            background: transparent;
+            border: 1px solid #c1c1c1;
+            box-sizing: border-box;
+            box-shadow: inset 0px 2px 3px rgba(0,0,0,0.2);
+
+            overflow: hidden;
+        }
+        :host([large]) #outerWrapper {
+            height: 35px;
+        }
+        :host([dark]) #outerWrapper,
+        :host-context([dark]) #outerWrapper,
+        :host-context([selected]) #outerWrapper{
+            border: 1px solid #1f1f1f;
+            box-shadow: inset 0px 2px 3px rgba(0,0,0,0.4);
+        }
+        @-webkit-keyframes ScrollBackground {
+            0%{background-position-x:-28px}
+            100%{background-position-x:0px}
+        }
+        @keyframes ScrollBackground { 
+            0%{background-position-x:-28px}
+            100%{background-position-x:0px}
+        }
+        @-webkit-keyframes ScrollBackgroundLarge {
+            0%{background-position-x:-56px}
+            100%{background-position-x:0px}
+        }
+        @keyframes ScrollBackgroundLarge { 
+            0%{background-position-x:-56px}
+            100%{background-position-x:0px}
+        }
+        :host #progress {
+            height: 100%;
+            width: var(--progress);
+
+            transition: width 400ms ease-in-out;  
+
+            border: 1px solid rgba(0,0,0,.05);
+            background-color: var(--bg-color);
+            /*background: repeating-linear-gradient(
+                45deg,
+                #0e6eb8,
+                #0e6eb8 10px,
+                #1579c5 10px,
+                #1579c5 20px
+            );*/
+            /*background: repeating-linear-gradient(
+                45deg,
+                rgba(0,0,0,0),
+                rgba(0,0,0,0) 10px,
+                rgba(0,0,0,0.1) 10px,
+                rgba(0,0,0,0.1) 20px
+            );*/
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 10px,
+                rgba(255,255,255,0.15) 10px,
+                rgba(255,255,255,0.15) 20px
+            );
+            background-size: 400% 400%;
+            background-position-x: -28px;
+            box-shadow: 2px 0px 10px rgba(0,0,0,.35);
+            
+            box-sizing: border-box;
+        }
+        :host([large]) #progress{
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 20px,
+                rgba(255,255,255,0.15) 20px,
+                rgba(255,255,255,0.15) 40px
+            );
+            background-size: 400% 400%;
+            background-position-x: -56px;
+        }
+        :host([color]) #progress{
+            background-color: var(--bg-color);
+        }
+        :host([animate]) #progress {
+            -webkit-animation: ScrollBackground 1s linear infinite;
+            animation: ScrollBackground 1s linear infinite;
+        }
+        :host([animate][large]) #progress {
+            -webkit-animation: ScrollBackgroundLarge 1s linear infinite;
+            animation: ScrollBackgroundLarge 1s linear infinite;
+        }
+        :host #glow {
+            height: 100%;
+            width: 100%;
+            background: -moz-linear-gradient(top,  rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 45%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0.75)), color-stop(45%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  rgba(255,255,255,0.75) 0%,rgba(255,255,255,0) 45%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  rgba(255,255,255,0.75) 0%,rgba(255,255,255,0) 45%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  rgba(255,255,255,0.75) 0%,rgba(255,255,255,0) 45%); /* IE10+ */
+            background: linear-gradient(to bottom,  rgba(255,255,255,0.75) 0%,rgba(255,255,255,0) 45%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#BFFFFFFF', endColorstr='#00FFFFFF',GradientType=0 ); /* IE6-9 */
+            box-sizing: border-box;
+        }
+    </style>
+
+    <template>
+        <div id="outerWrapper">
+            <div id="progress"><div id="glow"></div></div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-progressbar",
+            properties:{
+                percent: {
+                    type: Number,
+                    value: 0,
+                    observer: '_updatePercent'
+                },
+                animate:{
+                    type: Boolean,
+                    value: false
+                },
+                color: {
+                    type: String,
+                    value: "#0e6eb8",
+                    observer: '_updateColor'
+                },
+                dark:{
+                    type: Boolean,
+                    value: false
+                }
+            },
+            _updatePercent: function(){
+                var val = 0;
+                if(!isNaN(parseFloat(this.percent))){
+                    val = parseFloat(this.percent);
+                }
+                val=(val>100)?100:((val<0)?0:val);
+                this.customStyle['--progress'] = val+"%";
+                this.updateStyles();
+            },
+            _updateColor: function(){
+                var val = "#0e6eb8";
+                if(this.color!=null && this.color!=""){
+                    val = this.color;
+                }
+                this.customStyle['--bg-color'] = val.toString();
+                this.updateStyles();
+            }
+        });
+    </script>
+</dom-module>

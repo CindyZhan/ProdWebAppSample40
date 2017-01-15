@@ -1,0 +1,367 @@
+<!--
+Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+`px-checkbox` is a button that can be either checked or unchecked.  User
+can tap the checkbox to check or uncheck it.  Usually you use checkboxes
+to allow user to select multiple options from a set.  If you have a single
+ON/OFF option, avoid using a single checkbox and use `paper-toggle-button`
+instead.
+
+Example:
+
+    <px-checkbox></px-checkbox>
+
+    <px-checkbox checked></px-checkbox>
+    
+
+@group Power Xpert Blue
+@element px-checkbox
+@extends paper-radio-button
+@homepage github.io
+-->
+
+<link rel="import" href="../paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-checkbox" extends="paper-radio-button">
+    <style>
+    /* Base Styling */
+        :host {
+            height: 20px;
+            display: inline-block;
+            vertical-align: top;
+            white-space: nowrap;
+
+            cursor: pointer;
+        }
+        :host .hidden {
+            display: none;
+        }
+        :host #checkboxContainer {
+            position: relative;
+            display: inline-block;
+
+            width: auto;
+            height: 20px;
+            cursor: pointer;
+
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+
+            @apply(--layout-horizontal);
+            @apply(--layout-center);
+        }
+        :host([buttonstyle]){
+            width: 40px;
+            min-width: 40px;
+            height: 35px;
+            min-height: 35px;
+
+            background: #ffffff; /* Old browsers */
+            background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f2f2f2)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #ffffff 0%,#f2f2f2 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #ffffff 0%,#f2f2f2 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #ffffff 0%,#f2f2f2 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0 ); /* IE6-9 */
+
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,.1) inset;
+            border:1px solid #c1c1c1;
+            box-sizing: border-box;
+
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+        }
+        :host([buttonstyle][dark]), :host-context([dark])[buttonstyle]{
+            background: #545454; /* Old browsers */
+            background: -moz-linear-gradient(top,  #545454 0%, #333333 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#545454), color-stop(100%,#333333)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #545454 0%,#333333 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #545454 0%,#333333 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #545454 0%,#333333 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #545454 0%,#333333 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#545454', endColorstr='#333333',GradientType=0 ); /* IE6-9 */
+
+            border-color:#161616;
+        }
+        :host([buttonstyle]:hover){
+            background: #ffffff; /* Old browsers */
+            background: -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f7f7f7)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); /* IE6-9 */
+        }
+        :host([buttonstyle][dark]:hover), :host-context([dark])[buttonstyle]:hover{
+            background: #5c5c5c; /* Old browsers */
+            background: -moz-linear-gradient(top,  #5c5c5c 0%, #3b3b3b 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5c5c5c), color-stop(100%,#3b3b3b)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%); /* IE10+ */
+            background: linear-gradient(to bottom,  #5c5c5c 0%,#3b3b3b 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5c5c5c', endColorstr='#3b3b3b',GradientType=0 ); /* IE6-9 */
+        }
+
+
+    /* Internals Styling */
+        :host #checkWrap{
+            border: 1px solid transparent;
+        }
+        :host #checkbox {
+            box-sizing: border-box;
+            position: relative;
+
+            width: 20px;
+            height: 20px;
+
+            background-color:#fff;
+            border: solid 1px #c1c1c1;
+            border-radius: 0px;
+
+            pointer-events: none;
+
+            transition: background-color 140ms, border-color 140ms;
+        }
+        :host #checkboxLabel {
+            padding-left: 5px;
+            font-size: 14px;
+            color:#666;
+
+            white-space: normal;
+            pointer-events: none;
+            cursor: pointer;
+
+            transition:all 500ms ease-in-out;
+        }
+        :host #checkboxLabel[hidden], :host([buttonstyle]) #checkboxLabel,
+        :host #checkboxLabelIcon[hidden], :host([buttonStyle]) #checkboxLabelIcon {
+            display: none;
+        }
+        :host #checkboxLabelIcon {
+            padding-left: 5px;
+            white-space: normal;
+            pointer-events: none;
+        }
+        
+
+    /* Dark Styles */
+        :host([dark]) #checkbox, :host-context([dark]) #checkbox{
+            background-color:rgb(35, 35, 35);
+            border-color:rgb(22,22,22);
+            box-shadow: inset 0px 2px 2px rgba(0,0,0,.1), 0px 2px 0px rgba(255,255,255,.08);
+        }
+
+        :host([dark]) #checkmark, :host-context([dark]) #checkmark{
+            border-color:rgb(224, 224, 224);
+        }
+
+        :host([dark]) #checkboxLabel, :host-context([dark]) #checkboxLabel {
+            color:rgb(224, 224, 224);
+        }
+
+
+    /* Focus Styles */
+        :host(:focus){
+            outline: 0;
+        }
+        :host(:focus) #checkWrap {
+            box-shadow: 0px 0px 25px rgba(2, 111, 190, .25);
+        }
+        :host(:focus) #checkbox, :host(:focus) #checkWrap,
+        :host([dark]:focus) #checkbox, :host([dark]:focus) #checkWrap,
+        :host-context([dark]):focus #checkbox, :host-context([dark]):focus #checkWrap{
+            border-color: #0e6eb8;
+        }
+
+
+    /* Check Animations */
+        @-webkit-keyframes checkmark-expand {
+            0% {
+                top: 8px;
+                left: 4px;
+                width: 0px;
+                height: 0px;
+            }
+            100% {
+                top: 1px;
+                left: 4px;
+                width: 5px;
+                height: 9px;
+            }
+        }
+
+        @keyframes checkmark-expand {
+            0% {
+                top: 8px;
+                left: 4px;
+                width: 0px;
+                height: 0px;
+            }
+            100% {
+                top: 1px;
+                left: 4px;
+                width: 5px;
+                height: 9px;
+            }
+        }
+
+
+    /* Checked Styles */
+        :host([checked])  #checkmark {
+            position: absolute;
+            top: 1px;
+            left: 4px;
+            width: 5px;
+            height: 9px;
+
+            border-radius: 1px;
+            border-style: solid;
+            border-top: none;
+            border-left: none;
+            border-right-width: 5px;
+            border-bottom-width: 5px;
+            border-color: #4d4d4d;
+
+            -webkit-transform: rotate(45deg);
+            transform: rotate(45deg);
+
+            /* -webkit-animation: checkmark-expand 140ms ease-out forwards;
+            animation: checkmark-expand 140ms ease-out forwards;*/
+        }
+        :host([dark]) #checkmark, :host-context([dark]) #checkmark{
+            border-color: #f3f3f3;
+        }
+
+
+    /* Disabled Styles */
+        :host([disabled]) {
+            pointer-events: none;
+            opacity: 0.35;
+        }
+
+        :host([disabled]) #checkbox {
+            background: transparent;
+        }      
+    </style>
+
+    <template>
+        <div id="checkboxContainer">
+            <div id="checkWrap"><!-- use this extra wrapper to get the double focus border without check shifting -->
+                <div id="checkbox" class$="[[_computeCheckboxClass(checked)]]">
+                    <div id="checkmark" class$="[[_computeCheckmarkClass(checked)]]"></div>
+                </div>
+            </div>
+            <template is="dom-if" if="{{icon}}">
+                <div id="checkboxLabelIcon"><iron-icon icon="{{icon}}"></iron-icon></div>
+            </template>
+            <template is="dom-if" if="{{label}}">
+                <div id="checkboxLabel">{{label}}<content></content></div>
+            </template>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'px-checkbox',
+            behaviors: [
+                Polymer.IronButtonState
+            ],
+            hostAttributes: {
+                role: 'checkbox',
+                'aria-checked': false,
+                tabindex: 0
+            },
+            properties: {
+            /**
+            * Fired when the checked state changes due to user interaction.
+            *
+            * @event change
+            */
+
+            /**
+            * Fired when the checked state changes.
+            *
+            * @event iron-change
+            */
+
+            /**
+            * Gets or sets the state, `true` is checked and `false` is unchecked.
+            */
+                checked: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true,
+                    notify: true,
+                    observer: '_checkedChanged'
+                },
+            /**
+            * If true, the button toggles the active state with each tap or press
+            * of the spacebar.
+            */
+                toggles: {
+                    type: Boolean,
+                    value: true,
+                    reflectToAttribute: true
+                },
+                dark: {
+                    type: Boolean,
+                    value: false
+                },
+                label: {
+                    type: String,
+                    value: null
+                },
+                icon: {
+                    type: String,
+                    value: null
+                },
+                buttonstyle: {
+                    type: Boolean,
+                    value: false
+                }
+            },
+            ready: function() {
+                this._isReady = true;
+            },
+            // button-behavior hook
+            _buttonStateChanged: function() {
+                if (this.disabled) {
+                    return;
+                }
+                if (this._isReady) {
+                    this.checked = this.active;
+                }
+            },
+            _checkedChanged: function(checked, evt) {
+                this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+                this.active = this.checked;
+                this.fire('iron-change');
+            },
+            _computeCheckboxClass: function(checked) {
+                if (checked) {
+                    return 'checked';
+                }
+                return '';
+            },
+            _computeCheckmarkClass: function(checked) {
+                if (!checked) {
+                    return 'hidden';
+                }
+                return '';
+            }
+        });
+    </script>
+</dom-module>

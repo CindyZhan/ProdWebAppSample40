@@ -1,0 +1,158 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-icons/iron-icons.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+
+
+<dom-module id="px-modal">
+	<style>
+	/* Base Styling */
+		:host {
+			display: block;
+			position: fixed;
+
+			background-color: transparent;
+
+			top: 50%;
+			left: 50%;
+			width: 50%;
+			height: auto;
+			max-width: 99vw;
+			max-height: 99vh;
+			z-index: 3;
+
+			visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			backface-visibility: hidden;
+
+			oveflow-y:auto; /* scrolls when not enough vertical space */
+
+			-webkit-transform: translateX(-50%) translateY(-50%);
+			transform: translateX(-50%) translateY(-50%);
+			
+			transition: all .5s;
+		}
+		:host([wide]) {
+			width: 80%;
+		}
+		:host([mobile]), :host([tablet]) {
+			overflow-y:auto;
+			width:99vw;
+		}
+		:host([maxwidth]){
+			--m-width: 99vw;
+			max-width: var(--m-width);
+		}
+		:host .content {
+			-webkit-transform: scale(0);
+			transform: scale(0);
+
+			transition: all .5s;
+
+			opacity: 0;
+			box-shadow: 0 0 0 rgba(0,0,0,0);
+			@apply(--layout-vertical);
+		}
+		:host .inner-content {
+			background-color: #fff;
+			border:1px solid rgba(193, 193, 193, 1);
+			border-top: 0;
+			@apply(--layout-vertical);
+		}
+
+
+	/* Appear Animations */
+		:host(.visible) {
+			visibility: visible;
+		}
+		:host(.visible) .content {
+			-webkit-transform: scale(1);
+			transform: scale(1);
+
+			opacity: 1;
+			box-shadow: 0px 0px 50px rgba(0,0,0,.25);
+		}
+
+
+	/* Style Actionbars */
+		:host .content ::content px-actionbar{
+			padding: 0 25px;
+		}
+		:host .content ::content px-actionbar[dark] {
+			color:#f3f3f3;
+		}
+		:host .content ::content px-actionbar[bottom] {
+			border-bottom:0;
+			border-top: 1px solid #c1c1c1;
+			box-shadow: none;
+		}
+	</style>
+
+
+
+  	<template>
+		<div class="content">
+			<content select="px-actionbar:not([bottom])"></content>
+			<div class="inner-content">
+				<content></content>
+			</div>
+			<content select="px-actionbar[bottom]"></content>
+		</div>
+
+	    <iron-media-query
+	    query="{{mq}}"
+	    query-matches="{{tablet}}">
+	    </iron-media-query>
+
+
+	    <iron-media-query
+	   	query="{{mqmobile}}"
+	    query-matches="{{mobile}}">
+	    </iron-media-query>
+  	</template>
+
+
+  	<script>
+		Polymer({
+			is: "px-modal",
+			hostAttributes:{
+				role: "dialog"
+			},
+			properties:{
+				mq:{
+					type: String,
+					value: "(max-width: 800px)"
+				},
+				mqmobile:{
+					type: String,
+					value: "(max-width: 320px)"
+				},
+				wide:{
+					type: Boolean,
+					value: false
+				},
+				tablet:{
+					type: Boolean,
+					value: false,
+					reflectToAttribute: true
+				},
+				mobile:{
+					type: Boolean,
+					value: false,
+					reflectToAttribute: true
+				},
+				maxwidth:{
+					type: String,
+					value: null,
+					observer: '_updateMWidth'
+				}
+			},
+			_updateMWidth: function(){
+                var val = "99vw";
+                val=(this.maxwidth)?this.maxwidth:val;
+                this.customStyle['--m-width'] = val.toString();
+                this.updateStyles();
+            },
+		});
+  	</script>
+</dom-module>

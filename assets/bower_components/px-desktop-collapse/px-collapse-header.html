@@ -1,0 +1,217 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+This element is used in conjunction with px-collapse. The content of this element will be used as the title. It will also take px-checkbox and px-radio elements. Subtext is helper text.
+
+##### Example
+
+    <px-collapse-header icon="px-icons:locale" controls="locale-panel">Locale</px-collapse-header>
+
+@element px-collapse-header
+@blurb This element is used in conjunction with px-collapse. The content (ideally h1) of this element will be used as the title. It will also take px-checkbox, px-button and px-radio elements. Subtext attribute or h2 are used as helper text.
+@status alpha
+@homepage http://eatonuxd.com
+-->
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-icons/iron-icons.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-collapse-header">
+
+	<style>
+
+		:host {
+			display: block;
+			border-bottom:1px solid #c1c1c1;
+
+			color:#333333;
+			font-weight: 400;
+			box-sizing:border-box;
+			cursor: pointer;
+
+			outline: none;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+		:host([dark]), :host-context([dark]){
+			color: #f3f3f3;
+			border-color: #111;
+		}
+		:host #header-wrapper:hover{
+			background-color: rgba(0,0,0,.05);
+		}
+		:host iron-icon.icon {
+			margin-right:10px;
+			width:20px;
+			height: 20px;
+		}
+		:host #header-wrapper {
+			padding: 10px 25px;
+			line-height: 20px;
+			transition:background 200ms ease-in-out;
+			@apply(--layout-horizontal);
+			@apply(--layout-center);
+		}
+		:host .subtext {
+			font-weight: 400;
+			opacity: .75;
+			max-width: 65%;
+			margin-left: 10px;
+		}
+
+		:host([active]) .arrow {
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+
+		:host(:not[active]) {
+			margin-bottom:20px;
+		}
+
+		:host .arrow {
+			width: 15px;
+			height: 15px;
+			margin: 4px;
+			margin-right:10px;
+			-webkit-transform: rotate(0deg);
+			transform: rotate(0deg);
+			transition: all 200ms ease-in-out;			
+		}
+
+		:host #check-wrap ::content px-checkbox, :host #radio-wrap ::content px-radio{
+			margin-right:10px;
+			z-index: 1;
+		}
+		:host .flex{
+			@apply(--layout-flex);
+		}
+		:host ::content .light {
+			font-weight: 400!important;
+		}
+
+	</style>
+
+	<template>
+
+		<div id="header-wrapper">
+		<!-- <paper-ripple></paper-ripple> -->
+			<iron-icon icon="px-icons:more" class="arrow"></iron-icon>
+
+			<template is="dom-if" if="{{icon}}"><iron-icon icon="{{icon}}" class="icon"></iron-icon></template>
+
+			<div id="check-wrap"><content select="px-checkbox"></content></div>
+			<div id="radio-wrap"><content select="px-radio"></content></div>
+			<content select="px-title"></content>
+			<span class="subtext">{{subtext}}<content select="h2"></content></span>
+			<content select=":not(px-button):not(px-icon-button)"></content>
+			<span class="flex"></span>
+			<div id="button-wrap"><content></content></div>
+
+		</div>
+	</template>
+
+	<script>
+		Polymer({
+			is: "px-collapse-header",
+			properties: {
+			/**
+			* Takes the ID of the corresponding Collapse Panel. Must include # or .
+			*
+			* @attribute controls
+			* @type string
+			* @default null
+			*/
+				controls: {type:String},
+
+			/**
+			* Uses media query to set breakpoint
+			*
+			* @attribute primary
+			* @type string
+			* @default false
+			*/
+				mq: {type:String, value:"max-width: 500px"},
+
+
+			/**
+			* If true, the header will be dark; text, icons white.
+			*
+			* @attribute dark
+			* @type boolean
+			* @default false
+			*/
+				dark: {type:Boolean, value:false},
+
+			/**
+			* If true, the header will be gray. Device Profiles, Device Tree
+			*
+			* @attribute gray
+			* @type boolean
+			* @default false
+			*/
+				gray: {type:Boolean, value:false},
+				grey: {type:Boolean, value:false},
+
+			/**
+			* Displays an icon in the header using iron-icon
+			*
+			* @attribute icon
+			* @type string
+			* @default null
+			*/
+				icon: {type:String},
+
+			/**
+			* Adds subtext to the right side of the header if used
+			*
+			* @attribute subtext
+			* @type string
+			* @default null
+			*/
+				subtext: {type:String},
+
+			/**
+			* If true, the header will have a open arrow
+			*
+			* @attribute active
+			* @type boolean
+			* @default true
+			*/
+				active: {type:Boolean, value:true, reflectToAttribute:true}
+			},
+
+			listeners: {
+				up: 'toggle',
+				'check-wrap.up':'doNotPropagate',
+				'button-wrap.up':'doNotPropagate',
+				'radio-wrap.up':'doNotPropagate'
+			},
+			doNotPropagate: function(event){
+				event.stopPropagation();
+				event.preventDefault();
+			},
+			toggle: function() {
+				document.querySelector(this.controls).toggle();
+				this.setActive(document.querySelector(this.controls).isOpened());
+			},
+
+			setActive: function(state) {
+				this.active=state;
+			}
+
+		});
+	</script>
+</dom-module>

@@ -1,0 +1,96 @@
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-card-container">
+
+    <style>
+        :host {
+            @apply(--layout-vertical);
+            -webkit-flex: 1;-ms-flex: 1;flex: 1;
+            -webkit-flex-basis: 0;-ms-flex-preferred-size: 0;flex-basis: 0;
+            margin: 15px calc(3vw - 15px);
+        }
+        :host([horizontal]) {
+            @apply(--layout-horizontal);
+        }
+        :host([vertical]) {
+            @apply(--layout-vertical);
+        }
+        :host([fixed]){
+            flex: none;
+        }
+        :host([stacked]) {
+            @apply(--layout-vertical);
+            -webkit-flex:none;-ms-flex:none;flex:none;
+            -webkit-flex-basis: auto;-ms-flex-preferred-size: auto;flex-basis: auto;
+        }
+        :host ::content px-card-container{
+            margin: 0;
+        }
+        :host([stacked]) ::content px-card{
+            -webkit-flex:none;-ms-flex:none;flex:none;
+            -webkit-flex-basis: auto;-ms-flex-preferred-size: auto;flex-basis: auto;
+        }
+    </style>
+
+    <template>
+
+        <content></content>
+        <iron-media-query
+        query="{{setvertical}}"
+        query-matches="{{vertical}}">
+        </iron-media-query>
+        <iron-media-query
+        query="{{sethorizontal}}"
+        query-matches="{{horizontal}}">
+        </iron-media-query>
+        <iron-media-query
+        query="{{setstacked}}"
+        query-matches="{{stacked}}">
+        </iron-media-query>
+
+    </template>
+
+    <script>
+        Polymer({
+            is:'px-card-container',
+            properties: {
+                horizontal:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                vertical:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                setvertical:{
+                    type:String,
+                    value: ""
+                },
+                sethorizontal:{
+                    type:String,
+                    value: ""
+                },
+                setstacked:{
+                    type:String,
+                    value: "(max-width: 1100px)"
+                },
+                fixed:{
+                    type: Boolean,
+                    value: false
+                },
+                stacked:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                }
+            }
+
+        });
+    </script>
+</dom-module>

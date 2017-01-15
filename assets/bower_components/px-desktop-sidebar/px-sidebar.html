@@ -1,0 +1,232 @@
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-sidebar">
+
+	<style>
+		:host {
+			height: 100%;
+			max-width:375px;
+			min-width:375px;
+			display:block;
+			z-index: 1;
+			background:#fff;
+			color: #333;
+			/*display: flex;
+			flex-direction:column;
+			flex-wrap:nowrap;*/
+			@apply(--layout-vertical);
+			border-left:1px solid #c1c1c1;
+
+			transition: 500ms cubic-bezier(0.680, -0.25, 0.265, 1.25); /* easeInOutBack */
+			transition-timing-function: cubic-bezier(0.680, -0.25, 0.265, 1.25); /* easeInOutBack */
+			transition-property: width;
+		}
+
+		:host([dark]){
+			background:#333;
+			border-color: #111;
+			color:rgba(255,255,255,.7);
+		}
+
+		:host([floating]) {
+			box-shadow: -10px 0px 50px rgba(0,0,0,.125);
+			z-index: 2;
+			position: relative;
+		}
+
+
+		:host([mobile]), :host([tablet]) {
+			/*position: absolute;*/
+			width:auto;
+			min-width:250px;
+			min-width:10px;
+			/*width:20px;*/
+		}
+
+		:host([mobile]) #toggle-button, :host([tablet]) #toggle-button {
+			display: block
+		}
+
+		:host([mobile]) /deep/ px-actionbar:first-of-type, :host([tablet]) /deep/ px-actionbar:first-of-type {
+			padding-left:45px!important;
+		}
+
+		:host(.px-sidebar-closed) {
+			width:35px;
+		}
+
+
+
+		:host #sidebarWrapper{
+			@apply(--layout-vertical);
+			-webkit-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+		}
+		:host #sbABwrapper ::content px-actionbar{
+			box-shadow: none;
+			padding: 0 25px;
+		}
+
+		:host .sidebar-content {
+			overflow-y:auto;
+			@apply(--layout-flex);
+		}
+
+
+		/*:host #sidebarWrapper ::content px-column[title] {
+			font-weight: 300;
+		}*/
+		:host #content ::content px-row[status="alarm"]{
+			background: #f33333;
+			color: #f3f3f3;
+		}
+		:host #content ::content px-row[status="alarm"] px-column[title]{
+			color: #f3f3f3;
+		}
+
+		/* Misc content handling */
+
+		/*:host #sbABwrapper ::content iron-icon {
+			margin-right:10px; 
+			width:20px; 
+			height: 20px;
+		}*/
+
+		/* Think of a good way to style this when we get to inputs */
+		:host #content ::content px-toggle-button-group, :host #content ::content px-input  {
+			@apply(--layout-vertical);
+			@apply(--layout-start);
+		}
+		:host #content ::content px-toggle-button-group /deep/ label, :host #content ::content px-input /deep/ label  {
+			margin-bottom: 10px;
+			font-weight: 700;
+		}
+
+		/*:host #content ::content px-toggle-button-group /deep/ #selector{
+            width: 100%;
+        }*/
+
+
+	/*	  //Chrome/Webkit Scrollbars*/
+		:host([dark]) ::-webkit-scrollbar {
+			width: 7px; height: 7px; /*Young Man Size*/
+			/*width: 10px; height: 10px;*/ /*Old Man Size*/
+			/*width: 14px; height: 14px;*/ /*Rick Size*/
+			background: #333;
+		}
+		:host([dark]) ::-webkit-scrollbar-track {
+			background: #333;
+		}
+		:host([dark]) ::-webkit-scrollbar-thumb {
+			background: #606060; /*url('images/scroll-thumb.png') no-repeat center center;*/
+		}
+
+		#toggle-button{
+			display: none;
+			width:30px;
+			position: absolute;
+			height:60px;
+			padding:20px 10px;
+			z-index: 16
+		}
+	</style>
+
+	<template>
+		<!-- <content select="core-toolbar"></content> -->
+		<div id="sidebarWrapper">
+			<div id="sbABwrapper">
+				<div id="toggle-button" on-click="toggle">
+					<iron-icon icon="px-icons:back"></iron-icon>
+				</div>
+				<content select="px-actionbar"></content>
+			</div>
+			<section id="content" class="sidebar-content">
+				<content select=":not(px-pocket)"></content>
+			</section>
+			<div id="sbPwrapper">
+				<content select="px-pocket"></content>
+			</div>
+		</div>
+		<iron-media-query
+		query="{{mq}}"
+		query-matches="{{mobile}}">
+		</iron-media-query>
+		<iron-media-query
+		query="{{mqtablet}}"
+		query-matches="{{tablet}}">
+		</iron-media-query>
+		<iron-media-query
+		query="{{mqvertical}}"
+		query-matches="{{collapse}}">
+		</iron-media-query>
+	</template>
+
+	<script>
+		Polymer({
+			is: "px-sidebar",
+			properties:{
+				mq:{
+                    type:String,
+                    value: "(max-width: 320px)"
+                },
+                mqtablet:{
+                    type:String,
+                    value: "(max-width: 768px)"
+                },
+                mqvertical:{
+                	type: String,
+                	value: "(max-height: 500px)"
+                },
+                mobile:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                tablet:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+				dark:{
+					type: Boolean,
+					value: false
+				},
+				floating:{
+					type: Boolean,
+					value: true
+				},
+				collapse:{
+					type: Boolean,
+					value: false,
+					reflectToAttribute: true
+				},
+                opened: {
+                    type: Boolean,
+                    value: true,
+                    notify: true,
+                    observer: '_openedChanged'
+                }
+            },
+
+            toggle: function() {
+                this.opened = !this.opened;
+            },
+            show: function() {
+                this.toggleClass('px-sidebar-closed', false);
+            },
+            hide: function() {
+                this.toggleClass('px-sidebar-opened', false);
+            },
+            _openedChanged: function() {
+                this[this.opened ? 'show' : 'hide']();
+                this.setAttribute('aria-expanded', this.opened ? 'true' : 'false');
+                this.toggleClass('px-sidebar-closed', !this.opened);
+                this.toggleClass('px-sidebar-opened', this.opened);
+			}
+		});
+	</script>
+</dom-module>

@@ -1,0 +1,165 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="paper-input-behavior.html">
+<link rel="import" href="px-input-container.html">
+<!-- <link rel="import" href="paper-input-error.html">
+<link rel="import" href="paper-input-char-counter.html"> -->
+
+
+<dom-module id="px-input">
+    <style>
+        /* Base Styling */
+            :host{
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+                width: 100%;
+
+                outline: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+
+                @apply(--layout-horizontal);
+                @apply(--layout-center);
+            }
+            :host label {
+                margin-right: 10px;
+                width: auto;
+                color: inherit;
+            }
+            :host px-input-container{
+                display: block;
+                flex: 1;
+            }
+            :host([disabled]){
+                opacity: .35;
+                cursor: auto;
+                pointer-events: none;
+            }
+
+        /* Placeholder text styling - for some reason these each need their own rule */
+
+            input::-webkit-input-placeholder{
+                color: #333;
+                opacity: .55;
+
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            input:-moz-placeholder{
+                color: #333;
+                opacity: .55;
+
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            input::-moz-placeholder{
+                color: #333;
+                opacity: .55;
+
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+            }
+            input:-ms-input-placeholder {
+                color: #333;
+                opacity: .55;
+
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 400;
+            }
+
+            :host-context([dark]) input::-webkit-input-placeholder{
+                color: #f3f3f3;
+            }
+            :host([dark]) input::-webkit-input-placeholder{
+                color: #f3f3f3;
+            }
+            :host-context([dark]) input:-moz-placeholder{
+                color: #f3f3f3;
+            }
+            :host([dark]) input:-moz-placeholder{
+                color: #f3f3f3;
+            }
+            :host-context([dark]) input::-moz-placeholder{
+                color: #f3f3f3;
+            }
+            :host([dark]) input::-moz-placeholder{
+                color: #f3f3f3;
+            }
+            :host-context([dark]) input:-ms-input-placeholder{
+                color: #f3f3f3;
+            }
+            :host([dark]) input:-ms-input-placeholder{
+                color: #f3f3f3;
+            }
+    </style> 
+
+    <template>
+        <template is="dom-if" if="{{label}}">
+            <label>{{label}}</label>
+        </template>
+
+        <px-input-container auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid$="[[invalid]]" prefix$="[[prefix]]" suffix$="[[suffix]]" rightalign$="[[rightalign]]">
+
+            <!-- <label hidden$="[[!label]]">[[label]]</label> -->
+
+            <input is="iron-input" id="input"
+                aria-labelledby$="[[_ariaLabelledBy]]"
+                aria-describedby$="[[_ariaDescribedBy]]"
+                disabled$="[[disabled]]"
+                bind-value="{{value}}"
+                invalid="{{invalid}}"
+                prevent-invalid-input="[[preventInvalidInput]]"
+                allowed-pattern="[[allowedPattern]]"
+                validator="[[validator]]"
+                type$="[[type]]"
+                pattern$="[[pattern]]"
+                required$="[[required]]"
+                autocomplete$="[[autocomplete]]"
+                autofocus$="[[autofocus]]"
+                inputmode$="[[inputmode]]"
+                minlength$="[[minlength]]"
+                maxlength$="[[maxlength]]"
+                min$="[[min]]"
+                max$="[[max]]"
+                step$="[[step]]"
+                name$="[[name]]"
+                placeholder$="[[placeholder]]"
+                readonly$="[[readonly]]"
+                list$="[[list]]"
+                size$="[[size]]"
+                autocapitalize$="[[autocapitalize]]"
+                autocorrect$="[[autocorrect]]">
+
+            <!-- <template is="dom-if" if="[[errorMessage]]">
+            <paper-input-error>[[errorMessage]]</paper-input-error>
+            </template> -->
+
+            <!-- <template is="dom-if" if="[[charCounter]]">
+            <paper-input-char-counter></paper-input-char-counter>
+            </template> -->
+
+        </px-input-container>
+
+    </template>
+    <script>
+        Polymer({
+            is: 'px-input',
+
+            behaviors: [
+                Polymer.IronFormElementBehavior,
+                Polymer.PaperInputBehavior,
+                Polymer.IronControlState
+            ]
+        });
+    </script>
+</dom-module>
+
+

@@ -1,0 +1,52 @@
+﻿html {
+    height: 100%;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    font-size: 14px;
+    height: 100%;
+    background: #f3f3f3;
+    margin: 0;
+    overflow: hidden;
+}
+
+tr {
+    color: #333;
+    height: 40px;
+    width: auto;
+    transition: background 200ms ease-in-out;
+    border: 1px solid #e5e5e5;
+}
+
+    tr.ng-scope {
+        border-bottom-color: #e5e5e5;
+        border-bottom-style: solid;
+        border-bottom-width: 1px;
+    }
+
+.content {
+    height: calc(100% - 103px);
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+    background: white;
+}
+
+::-webkit-scrollbar-track {
+    background: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c7c7c7;
+}
+
+    ::-webkit-scrollbar-thumb:horizontal {
+        background: #c7c7c7;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        width: 12px;
+    }

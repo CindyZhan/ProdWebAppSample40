@@ -1,0 +1,387 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+A humble button. Content of the button will be used as title. Icon attribute sets the icon. Can use attributes such as dark, negative, positive, primary and chameleon to change the visual display of the element. 
+
+##### Example
+
+    <px-button icon="px-icons:favorite">Favorite</px-button>
+
+@element px-button
+@blurb A humble button. Content of the button will be used as title. Icon attribute sets the icon. Can use attributes such as dark, negative, positive, primary and chameleon to change the visual display of the element. 
+@status alpha
+@homepage http://eatonuxd.com
+-->
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+<link href="../../fonts/open-sans/fontface.css" rel="import">
+
+
+<dom-module id="px-button">
+    <style>
+        /* Style for the buttons */
+            :host {
+                /*display: inline-block;*/
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+
+                padding: 0;
+
+                /* make ems */
+                min-width: 150px;
+                width:150px;
+                height: 35px;
+
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 14px;
+                font-weight: 600;
+                text-overflow: "…" "…";
+
+                outline: none;
+                border-radius: 0px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: pointer;
+                z-index: 0;
+
+                color:#606060;
+
+                background: #ffffff;
+                background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f2f2f2));
+                background: -webkit-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+                background: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+                background: -ms-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+                background: linear-gradient(to bottom, #ffffff 0%,#f2f2f2 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0 );
+
+                box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,.1) inset;
+                border:1px solid #c1c1c1;
+            }
+            :host([fixedwidth]){
+                width:150px;
+                min-width:150px;
+            }
+            :host([sidebar]) {
+                width:325px;
+            }
+            :host([flex]){
+                -webkit-flex: 1;-ms-flex: 1;flex: 1;
+                min-width: 0;
+            }
+            :host([forcesmall]),
+            :host([small]),
+            :host-context([small]) {
+                min-width: 40px;
+                width:40px;
+            }  
+            :host([dark]), :host-context([dark]) {
+                background: #545454;
+                background: -moz-linear-gradient(top,  #545454 0%, #333333 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#545454), color-stop(100%,#333333));
+                background: -webkit-linear-gradient(top,  #545454 0%,#333333 100%);
+                background: -o-linear-gradient(top,  #545454 0%,#333333 100%);
+                background: -ms-linear-gradient(top,  #545454 0%,#333333 100%);
+                background: linear-gradient(to bottom,  #545454 0%,#333333 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#545454', endColorstr='#333333',GradientType=0 );
+
+                border-color:#161616;
+                color: #f3f3f3;
+            }
+            :host([primary]) {
+                border: 1px solid #0e6eb8;
+            }
+            :host([chameleon]) {
+                background: -moz-linear-gradient(top,  rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.125) 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.05)), color-stop(100%,rgba(0,0,0,0.125)));
+                background: -webkit-linear-gradient(top,  rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.125) 100%);
+                background: -o-linear-gradient(top,  rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.125) 100%);
+                background: -ms-linear-gradient(top,  rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.125) 100%);
+                background: linear-gradient(to bottom,  rgba(0,0,0,0.05) 0%,rgba(0,0,0,0.125) 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a000000', endColorstr='#4d000000',GradientType=0 );
+
+                border-color:rgba(0,0,0,.2);
+                color: rgba(0,0,0,.5);
+            }
+            :host([positive]) {
+                background: #0d87c2; 
+                background: -moz-linear-gradient(top,  #0d87c2 0%, #005fa2 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0d87c2), color-stop(100%,#005fa2));
+                background: -webkit-linear-gradient(top,  #0d87c2 0%,#005fa2 100%); 
+                background: -o-linear-gradient(top,  #0d87c2 0%,#005fa2 100%); 
+                background: -ms-linear-gradient(top,  #0d87c2 0%,#005fa2 100%); 
+                background: linear-gradient(to bottom,  #0d87c2 0%,#005fa2 100%); 
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0d87c2', endColorstr='#005fa2',GradientType=0 );
+
+                border-color:#0e6eb8;
+                color: #f3f3f3;
+            }
+            :host([negative]) {
+                background: #f33333; 
+                background: -moz-linear-gradient(top,  #f33333 0%, #c50404 100%); 
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f33333), color-stop(100%,#c50404)); 
+                background: -webkit-linear-gradient(top,  #f33333 0%,#c50404 100%); 
+                background: -o-linear-gradient(top,  #f33333 0%,#c50404 100%); 
+                background: -ms-linear-gradient(top,  #f33333 0%,#c50404 100%); 
+                background: linear-gradient(to bottom,  #f33333 0%,#c50404 100%); 
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f33333', endColorstr='#c50404',GradientType=0 );
+
+                border-color:#c50404;
+                color: #f3f3f3;
+            }
+            :host([disabled]) {
+                opacity: .35;
+                cursor: auto;
+                pointer-events: none;
+            }
+
+    /* Styles for button hover */
+        /* Normal */
+            :host(:hover) {
+                background: #ffffff;
+                background: -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f7f7f7));
+                background: -webkit-linear-gradient(top, #ffffff 0%,#f7f7f7 100%);
+                background: -o-linear-gradient(top, #ffffff 0%,#f7f7f7 100%);
+                background: -ms-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); 
+                background: linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); 
+
+                /*color: #606060;*/
+                color: #0e6eb8;
+            }
+
+        /* Colored */
+            :host-context([dark]):hover, :host(:hover[dark]){
+                background: #5c5c5c;
+                background: -moz-linear-gradient(top,  #5c5c5c 0%, #3b3b3b 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5c5c5c), color-stop(100%,#3b3b3b));
+                background: -webkit-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%);
+                background: -o-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%);
+                background: -ms-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%); 
+                background: linear-gradient(to bottom,  #5c5c5c 0%,#3b3b3b 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5c5c5c', endColorstr='#3b3b3b',GradientType=0 ); 
+
+                color: #f3f3f3;
+            }
+            :host(:hover[positive]){
+                background: #158fca;
+                background: -moz-linear-gradient(top,  #158fca 0%, #0867aa 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#158fca), color-stop(100%,#0867aa));
+                background: -webkit-linear-gradient(top,  #158fca 0%,#0867aa 100%);
+                background: -o-linear-gradient(top,  #158fca 0%,#0867aa 100%);
+                background: -ms-linear-gradient(top,  #158fca 0%,#0867aa 100%); 
+                background: linear-gradient(to bottom,  #158fca 0%,#0867aa 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#158fca', endColorstr='#0867aa',GradientType=0 ); 
+
+                color: #f3f3f3;
+            }
+            :host(:hover[negative]){
+                background: #fb3b3b;
+                background: -moz-linear-gradient(top,  #fb3b3b 0%, #cd0c0c 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fb3b3b), color-stop(100%,#cd0c0c));
+                background: -webkit-linear-gradient(top,  #fb3b3b 0%,#cd0c0c 100%);
+                background: -o-linear-gradient(top,  #fb3b3b 0%,#cd0c0c 100%);
+                background: -ms-linear-gradient(top,  #fb3b3b 0%,#cd0c0c 100%); 
+                background: linear-gradient(to bottom,  #fb3b3b 0%,#cd0c0c 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fb3b3b', endColorstr='#cd0c0c',GradientType=0 ); 
+
+                color: #f3f3f3;
+            }
+
+        /* Chameleon */
+            :host(:hover[chameleon]){
+                background: -moz-linear-gradient(top,  rgba(33,33,33,0.05) 0%, rgba(33,33,33,0.125) 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(33,33,33,0.05)), color-stop(100%,rgba(33,33,33,0.125)));
+                background: -webkit-linear-gradient(top,  rgba(33,33,33,0.05) 0%,rgba(33,33,33,0.125) 100%);
+                background: -o-linear-gradient(top,  rgba(33,33,33,0.05) 0%,rgba(33,33,33,0.125) 100%);
+                background: -ms-linear-gradient(top,  rgba(33,33,33,0.05) 0%,rgba(33,33,33,0.125) 100%); 
+                background: linear-gradient(to bottom,  rgba(33,33,33,0.05) 0%,rgba(33,33,33,0.125) 100%);
+                filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1a333333', endColorstr='#4d333333',GradientType=0 ); 
+
+                color: rgba(0,0,0,.5);
+            } 
+
+
+    /* Styles for pressed buttons */   
+        /* Normal */
+            :host(:active), :host([active]), :host([pressed]){
+                color: #0e6eb8;
+                box-shadow: 0 2px 6px rgba(0,0,0,0.125) inset;
+                background: #e6e6e6;
+            }
+        /* Dark */
+            :host(:active[dark]), :host([active][dark]), :host([pressed][dark]),
+            :host-context([dark]):active, :host-context([dark])[active], :host-context([dark])[pressed]{
+                background: #1f1f1f;
+                color: #f3f3f3;
+            }
+        /* Positive */
+            :host(:active[positive]), :host([active][positive]), :host([pressed][positive]){
+                background: #095087;
+                color: #f3f3f3;
+            }
+        /* Negative */
+            :host(:active[negative]), :host([active][negative]), :host([pressed][negative]){
+                background: #b80909;
+                color: #f3f3f3;
+            }
+        /* Chameleon */
+            :host(:active[chameleon]), :host([active][chameleon]), :host([pressed][chameleon]){
+                background: rgba(0,0,0,0.25);
+                color: rgba(0,0,0,.5);
+            }
+
+    /* Add a glow to active state (tab navigation) */
+        :host(:focus), :host([active]), :host(:active){
+            /*border: 2px solid #0e6eb8;*/
+            border: 1px solid #0e6eb8;
+            box-shadow: inset 0px 0px 10px rgba(2, 111, 190, .125), 0px 0px 25px rgba(2, 111, 190, .25);
+            z-index: 2;
+        }
+
+
+    /* Style the internals */
+        :host #focusWrapper{
+            height: 100%;
+            width: 100%;
+            padding: 0 5px;
+            box-sizing: border-box;
+            border: 1px solid transparent;
+        }
+        :host(:focus) #focusWrapper, :host([active]) #focusWrapper, :host(.active) #focusWrapper, :host([primary]) #focusWrapper{
+            border-color: #0e6eb8;
+        }
+        :host #button-content {
+            height: 100%;
+            width: 100%;
+            @apply(--layout-horizontal);
+            @apply(--layout-center-center);
+        }
+        :host #tool {
+            height: 100%;
+            width: 100%;
+        }
+        :host iron-icon {
+            margin-right:5px;
+            max-width: 20px;
+            max-height: 20px;
+            width: 20px;
+            height: 20px;
+        }
+        :host #label{
+            max-width: calc(100% - 25px);
+            white-space:nowrap;
+            text-overflow:ellipsis;
+            overflow: hidden;
+        }
+        :host([small]) #label, :host([forcesmall]) #label,
+        :host-context([small]) #label {
+            display:none;
+        };
+        :host([small]) iron-icon, :host([forcesmall]) iron-icon,
+        :host-context([small]) iron-icon {
+            margin:0!important;
+        }
+    </style>
+
+    <template>
+        <div id="focusWrapper">
+            <div id="button-content">
+                <template is="dom-if" if="{{icon}}">
+                    <iron-icon id="icon" icon="{{icon}}"></iron-icon>
+                </template>
+                <span id="label"><content></content></span>
+            </div>
+        </div>
+
+        <iron-media-query
+        query="{{mq}}"
+        query-matches="{{forcesmall}}">
+        </iron-media-query>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-button",
+            listeners:{
+                up: 'clearFocus'
+            },
+            clearFocus: function(event, detail, sender){
+                this.blur();
+            },
+            hostAttributes:{
+                role: "button",
+                tabindex: 0
+            },
+            properties:{
+                mq: {
+                    type: String,
+                    value: "(max-width: 400px)"
+                },
+                icon: {
+                    type: String,
+                    value: null
+                },
+                primary: {
+                    type:Boolean,
+                    value: false
+                },
+                negative: {
+                    type:Boolean,
+                    value: false
+                },
+                dark: {
+                    type:Boolean,
+                    value: false
+                },
+                active: {
+                    type:Boolean,
+                    value: false
+                },
+                chameleon: {
+                    type:Boolean,
+                    value:false
+                },
+                small: {
+                    type:Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                forcesmall: {
+                    type:Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                fixedwidth: {
+                    type:Boolean,
+                    value: false
+                },
+                pressed: {
+                    type:Boolean,
+                    value: false
+                },
+                flex:{
+                    type: Boolean,
+                    value: false
+                }
+            }
+        });
+    </script>
+</dom-module>

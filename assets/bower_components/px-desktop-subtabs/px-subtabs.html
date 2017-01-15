@@ -1,0 +1,36 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-subtabs">
+	<style>
+		:host {
+			height: 100%;
+			@apply(--layout-horizontal);
+			@apply(--layout-center);
+			--child-count: 1;
+			--maximum-width: 180px;
+			-webkit-flex: var(--child-count);
+			-ms-flex: var(--child-count);
+			flex: var(--child-count);
+			max-width: var(--maximum-width);
+	      }
+	</style>
+
+	<template>
+		<content select="px-tab"></content>
+	</template>
+
+	<script>
+		Polymer({
+				is: "px-subtabs",
+				properties:{
+
+				},
+				ready: function(){
+					this.customStyle['--child-count'] = this.children.length.toString();
+					this.customStyle['--maximum-width'] = (this.children.length*180)+'px';
+        			this.updateStyles();
+				}
+	    });
+	</script>
+</dom-module>

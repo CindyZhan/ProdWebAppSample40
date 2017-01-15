@@ -1,0 +1,234 @@
+<!--
+`px-dropdown-button` is a helper component for `px-dropdown`. It is a button styled to look like a dropdown menu. It should not be used on its own. -->
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+
+<link href="../px-icons/px-icons.html" rel="import" >
+
+<dom-module id="px-dropdown-button">
+    <template>
+        <style>
+            /* Style for the buttons */
+                :host {
+                    display: block;
+                    position: relative;
+                    box-sizing: border-box;
+
+                    padding: 0;
+
+                    flex: 1;
+                    height: 35px;
+
+                    text-align: center;
+                    font-family: "Open Sans", sans-serif;
+                    font-size: 14px;
+                    font-weight: 600;
+                    text-overflow: "…" "…";
+
+                    outline: none;
+                    border-radius: 0px;
+                    -webkit-user-select: none;
+                    -moz-user-select: none;
+                    -ms-user-select: none;
+                    user-select: none;
+                    cursor: pointer;
+                    z-index: 0;
+
+                    color:#606060;
+
+                    background: #ffffff;
+                    background: -moz-linear-gradient(top, #ffffff 0%, #f2f2f2 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f2f2f2));
+                    background: -webkit-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+                    background: -o-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+                    background: -ms-linear-gradient(top, #ffffff 0%,#f2f2f2 100%);
+                    background: linear-gradient(to bottom, #ffffff 0%,#f2f2f2 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f2f2f2',GradientType=0 );
+
+                    box-shadow: 0 1px 0 rgba(0,0,0,0.05), 0 1px 0 rgba(255,255,255,.1) inset;
+                    border:1px solid #c1c1c1;
+                }
+
+                :host([dark]), :host-context([dark]) {
+                    background: #545454;
+                    background: -moz-linear-gradient(top,  #545454 0%, #333333 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#545454), color-stop(100%,#333333));
+                    background: -webkit-linear-gradient(top,  #545454 0%,#333333 100%);
+                    background: -o-linear-gradient(top,  #545454 0%,#333333 100%);
+                    background: -ms-linear-gradient(top,  #545454 0%,#333333 100%);
+                    background: linear-gradient(to bottom,  #545454 0%,#333333 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#545454', endColorstr='#333333',GradientType=0 );
+
+                    border-color:#161616;
+                    color: #f3f3f3;
+                }
+
+                :host([disabled]) {
+                    opacity: .35;
+                    cursor: default;
+                    pointer-events: none;
+                }
+
+        /* Styles for button hover */
+            /* Normal */
+                :host(:hover) {
+                    background: #ffffff;
+                    background: -moz-linear-gradient(top, #ffffff 0%, #f7f7f7 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#f7f7f7));
+                    background: -webkit-linear-gradient(top, #ffffff 0%,#f7f7f7 100%);
+                    background: -o-linear-gradient(top, #ffffff 0%,#f7f7f7 100%);
+                    background: -ms-linear-gradient(top, #ffffff 0%,#f7f7f7 100%); 
+                    background: linear-gradient(to bottom, #ffffff 0%,#f7f7f7 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f7f7f7',GradientType=0 ); 
+
+                    /*color: #606060;*/
+                    color: #0e6eb8;
+                }
+
+            /* Colored */
+                :host-context([dark]):hover, :host(:hover[dark]){
+                    background: #5c5c5c;
+                    background: -moz-linear-gradient(top,  #5c5c5c 0%, #3b3b3b 100%);
+                    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#5c5c5c), color-stop(100%,#3b3b3b));
+                    background: -webkit-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%);
+                    background: -o-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%);
+                    background: -ms-linear-gradient(top,  #5c5c5c 0%,#3b3b3b 100%); 
+                    background: linear-gradient(to bottom,  #5c5c5c 0%,#3b3b3b 100%);
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#5c5c5c', endColorstr='#3b3b3b',GradientType=0 ); 
+
+                    color: #f3f3f3;
+                }
+
+
+        /* Styles for pressed buttons */   
+            /* Normal */
+                :host(:active), :host([active]), :host([pressed]){
+                    color: #0e6eb8;
+                    box-shadow: 0 2px 6px rgba(0,0,0,0.125) inset;
+                    background: #e6e6e6;
+                }
+            /* Dark */
+                :host(:active[dark]), :host([active][dark]), :host([pressed][dark]),
+                :host-context([dark]):active, :host-context([dark])[active], :host-context([dark])[pressed]{
+                    background: #1f1f1f;
+                    color: #f3f3f3;
+                }
+
+        /* Add a glow to active state (tab navigation) */
+            :host(:focus), :host([active]), :host(:active){
+                /*border: 2px solid #0e6eb8;*/
+                border: 1px solid #0e6eb8;
+                box-shadow: inset 0px 0px 10px rgba(2, 111, 190, .125), 0px 0px 25px rgba(2, 111, 190, .25);
+                z-index: 2;
+            }
+
+
+        /* Style the internals */
+            :host #focusWrapper{
+                height: 100%;
+                width: 100%;
+                padding: 0;
+                box-sizing: border-box;
+                border: 1px solid transparent;
+            }
+            
+            :host #button-content {
+                height: 100%;
+                width: 100%;
+                @apply(--layout-horizontal);
+                @apply(--layout-center);
+                padding-right: 50px;
+                padding-left: 10px;
+                box-sizing: border-box;
+            }
+
+            :host iron-icon {
+                margin-right:5px;
+                max-width: 20px;
+                max-height: 20px;
+                width: 20px;
+                height: 20px;
+            }
+            :host #label{
+                white-space:nowrap;
+                text-overflow:ellipsis;
+                overflow: hidden;
+            }
+            :host #icon{
+                margin: 0;
+            }
+            :host .vertBar{
+                @apply(--layout-horizontal);
+                @apply(--layout-center-center);
+                width: 40px;
+                height: calc(100% + 2px);
+                border-left: 1px solid #c1c1c1;
+                position: absolute;
+                top: -1px;
+                right: -1px;
+
+            }
+            :host([dark]) .vertBar, :host-context([dark]) .vertBar{
+                border-color: #171717;
+            }
+
+            :host(:focus) #focusWrapper, :host([active]) #focusWrapper, :host(.active) #focusWrapper, :host([primary]) #focusWrapper{
+                border-color: #0e6eb8;
+            }
+
+            :host(:focus) .vertBar, :host([active]) .vertBar, :host(.active) .vertBar{
+                border-color: #0e6eb8;
+                border-left-width: 2px;
+            }
+
+        </style>
+
+        <div id="focusWrapper">
+            <div id="button-content">
+                <span id="label"><content></content></span>
+                <div class="vertBar">
+                    <iron-icon id="icon" icon="px-icons:up-down"></iron-icon>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-dropdown-button",
+            listeners:{
+                up: 'clearFocus'
+            },
+            clearFocus: function(event, detail, sender){
+                this.blur();
+            },
+            hostAttributes:{
+                role: "button",
+                tabindex: 0
+            },
+            properties:{
+                /**
+                 *If set, the button will take on darker styling, to be used in dark-colored containers.
+                 */
+                dark: {type:Boolean, value: false},
+
+                /**
+                 *If set, the button will have a pressed appearance. Identical to `active`.
+                 */
+                pressed: {type:Boolean, value: false},
+
+                /**
+                 *If set, the button will have a pressed appearance. Identical to `pressed`.
+                 */
+                active: {type:Boolean, value: false},
+
+                /**
+                 *If set, the component will be grayed out and won't accept any user input.
+                 */
+                disabled:{type: Boolean, value: false}
+            }
+        });
+    </script>
+</dom-module>

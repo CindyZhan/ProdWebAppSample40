@@ -1,0 +1,102 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-navigation">
+	<style>
+
+		:host {
+		    background: #0687c2; /* Old browsers */
+		    background: -moz-linear-gradient(top, #0687c2 0%, #015ea1 100%); /* FF3.6+ */
+		    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0687c2), color-stop(100%,#015ea1)); /* Chrome,Safari4+ */
+		    background: -webkit-linear-gradient(top, #0687c2 0%,#015ea1 100%); /* Chrome10+,Safari5.1+ */
+		    background: -o-linear-gradient(top, #0687c2 0%,#015ea1 100%); /* Opera 11.10+ */
+		    background: -ms-linear-gradient(top, #0687c2 0%,#015ea1 100%); /* IE10+ */
+		    background: linear-gradient(to bottom, #0687c2 0%,#015ea1 100%); /* W3C */
+		    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0687c2', endColorstr='#015ea1',GradientType=0 ); /* IE6-9 */
+
+			color:rgb(241,241,241);
+			width: 100%;
+			max-height: 70px;
+			height:75px;
+			box-sizing: border-box;
+			padding-left: 3vw;
+			font-size: 12px;
+			overflow:hidden;
+			z-index: 1;
+
+            outline: none;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
+			@apply(--layout-horizontal);
+      		@apply(--layout-center);
+		 }
+		:host([dark]) {
+		    background: #444444; /* Old browsers */
+		    background: -moz-linear-gradient(top, #444444 0%, #282828 100%); /* FF3.6+ */
+		    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#444444), color-stop(100%,#282828)); /* Chrome,Safari4+ */
+		    background: -webkit-linear-gradient(top, #444444 0%,#282828 100%); /* Chrome10+,Safari5.1+ */
+		    background: -o-linear-gradient(top, #444444 0%,#282828 100%); /* Opera 11.10+ */
+		    background: -ms-linear-gradient(top, #444444 0%,#282828 100%); /* IE10+ */
+		    background: linear-gradient(to bottom, #444444 0%,#282828 100%); /* W3C */
+		    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#444444', endColorstr='#282828',GradientType=0 ); /* IE6-9 */
+		 }
+		:host([extra]) {
+		    background: #2f2f2f; /* Old browsers */
+		    background: -moz-linear-gradient(top, #2f2f2f 0%, #171717 100%); /* FF3.6+ */
+		    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2f2f2f), color-stop(100%,#171717)); /* Chrome,Safari4+ */
+		    background: -webkit-linear-gradient(top, #2f2f2f 0%,#171717 100%); /* Chrome10+,Safari5.1+ */
+		    background: -o-linear-gradient(top, #2f2f2f 0%,#171717 100%); /* Opera 11.10+ */
+		    background: -ms-linear-gradient(top, #2f2f2f 0%,#171717 100%); /* IE10+ */
+		    background: linear-gradient(to bottom, #2f2f2f 0%,#171717 100%); /* W3C */
+		    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f2f2f', endColorstr='#171717',GradientType=0 ); /* IE6-9 */
+
+			color:rgb(241,241,241);
+			max-height: 32px;
+			height:32px;
+			padding-left: 1vw;
+		 }
+		 :host(.open) {
+			left: 0px;
+			z-index: 1;
+			box-shadow: 10px 0px 100px rgba(0,0,0,0.4);
+			width:256px;
+		}
+		::content .flex{
+			@apply(--layout-flex);
+		}
+
+	</style>
+	<template>
+		<template is="dom-if" if={{!drawer}}>
+			<content></content>
+		</template>  
+	</template>
+
+	<script>
+		Polymer({
+			is: "px-navigation",
+			properties: {
+				mq:{
+					type: String,
+					value: "(max-height: 500px)"
+				},
+				dark:{
+					type: Boolean,
+					value: false
+				},
+				extra:{
+					type: Boolean,
+					value: false
+				},
+				drawer:{
+					type: Boolean,
+					value: false
+				}
+			}
+		});
+	</script>
+</dom-module>

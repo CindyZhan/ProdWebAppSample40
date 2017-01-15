@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+        <title>Demo of px-dropdown</title>
+        <script src="../webcomponentsjs/webcomponents.min.js"></script>
+        
+        <link rel="import" href="../px-desktop-dropdown/px-dropdown.html">
+        <link rel="import" href="../px-desktop-dropdown/px-menu-container.html">
+        <link rel="import" href="../px-desktop-dropdown/px-dropdown-button.html">
+        <link rel="import" href="../px-desktop-item/px-item.html">
+        <link rel="import" href="../px-desktop-actionbar/px-actionbar.html">
+
+        <link rel="import" href="../px-icons/px-icons.html">
+        <style rel="import" href="../font-opensans/fontface.css"></style>
+        
+        <style>
+            * {
+                font-family: Open Sans, sans-serif;
+            }
+            body{
+                margin:0px;
+            }
+        </style>
+
+    </head>
+    <body unresolved>
+        <px-actionbar>
+            <px-dropdown placeholder="Choose a Flavor...">
+                <px-item value="apple">Apple</px-item>
+                <px-item value="raspberry">Blue Raspberry</px-item>
+                <px-item value="cherry">Cherry</px-item>
+            </px-dropdown>
+
+            <px-dropdown placeholder="Choose a value or type your own..." textboxstyle>
+                <px-item value="apple">Apple</px-item>
+                <px-item value="raspberry">Blue Raspberry</px-item>
+                <px-item value="cherry">Cherry</px-item>
+            </px-dropdown>
+
+            <px-dropdown placeholder="Choose an Action..." action>
+                <px-item value="apple">Apple</px-item>
+                <px-item value="raspberry">Blue Raspberry</px-item>
+                <px-item value="cherry">Cherry</px-item>
+            </px-dropdown>
+        </px-actionbar><br/><br/>
+
+        <px-actionbar dark secondary>
+            <px-dropdown placeholder="Choose a Flavor...">
+                <px-item value="apple">Apple</px-item>
+                <px-item value="raspberry">Blue Raspberry</px-item>
+                <px-item value="cherry">Cherry</px-item>
+            </px-dropdown>
+
+            <px-dropdown placeholder="Choose a value or type your own..." textboxstyle>
+                <px-item value="apple">Apple</px-item>
+                <px-item value="raspberry">Blue Raspberry</px-item>
+                <px-item value="cherry">Cherry</px-item>
+            </px-dropdown>
+
+            <px-dropdown placeholder="Choose an Action...">
+                <px-item value="apple">Apple</px-item>
+                <px-item value="raspberry">Blue Raspberry</px-item>
+                <px-item value="cherry">Cherry</px-item>
+            </px-dropdown>
+        </px-actionbar>
+
+    </body>
+</html>

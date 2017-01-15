@@ -1,0 +1,53 @@
+﻿<!-- Main Content Area & Action Bars -->
+<div class="flex layout vertical">
+    <!-- Main Content -->
+    <div class="flex layout vertical" style="padding: 0; overflow-y:auto;">
+        <px-card-container setvertical="(max-width: 1600px)" horizontal>
+            <px-card-container horizontal>
+                <px-card >
+                    <px-actionbar autosize>
+                        <px-title><h1>Send Command</h1></px-title>
+                    </px-actionbar>
+                    <px-row>
+                        <px-column>
+                            <px-title>
+                                <h1 style="color: red; position: absolute">{{command.errorMsg}}</h1>
+                            </px-title>
+                        </px-column>
+                    </px-row>
+                    <px-row>
+                        <px-column>
+                            <px-button style="width: 200px; position: center;" ng-click="command.sendCommand('NUMBER')" ng-disabled="command._disableOnAuthentication()">Send Color</px-button>
+                        </px-column>
+                        <px-column>
+                            <select name='colorDropdown' id='colorDropdown' ng-model="command.selectedNumber">
+								<option value='0'>Off</option>
+								<option value='1'>Red</option>
+								<option value='2'>Green</option>
+								<option value='3'>Yellow</option>
+								<option value='4'>Blue</option>
+								<option value='5'>Magenta</option>
+								<option value='6'>Cyan</option>
+								<option value='7'>White</option>
+                            </select>
+                        </px-column>
+                        <px-column>
+                            <canvas id="circleIndicator" style="width: 180px;"></canvas>
+                         </px-column>
+                        <px-column></px-column>
+                    </px-row>
+                    <px-row>
+                        <px-column>
+                            <px-title>
+                                <h1 style="color: green; position: absolute">{{command.successMessage}}</h1>
+                            </px-title>
+                        </px-column>
+                    </px-row></px-card>
+            </px-card-container>
+        </px-card-container>
+    </div>
+</div>
+
+
+
+

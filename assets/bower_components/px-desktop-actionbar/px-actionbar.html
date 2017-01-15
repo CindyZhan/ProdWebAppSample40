@@ -1,0 +1,261 @@
+
+<link rel="import" href="../polymer/polymer.html">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+
+<dom-module id="px-actionbar">
+
+    <style>
+    /* Basic Styling */
+        :host {   
+            height: 62px; 
+            min-height: 62px;
+            font-size: 14px;
+            color: #606060;
+
+            border-bottom:1px solid #c1c1c1; 
+            border-color:#c1c1c1;
+            background-color: #fff;
+            box-sizing: border-box;
+            display: block;
+            padding: 0 3vw;
+            overflow: hidden;
+
+            outline: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,.20);
+        }
+        :host([secondary]) {   
+            background-color: #e9e9e9;
+        }
+        :host([empty]){
+            height: 25px;
+            min-height: 25px;
+        }
+        :host([autosize]){
+            height: auto;
+            min-height: 0px;
+            padding-top: 15px;
+            padding-bottom: 15px;
+        }
+
+        :host([navigation]) {
+            background: #0687c2;
+            background: -moz-linear-gradient(top, #0687c2 0%, #015ea1 100%);
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#0687c2), color-stop(100%,#015ea1));
+            background: -webkit-linear-gradient(top, #0687c2 0%,#015ea1 100%);
+            background: -o-linear-gradient(top, #0687c2 0%,#015ea1 100%);
+            background: -ms-linear-gradient(top, #0687c2 0%,#015ea1 100%);
+            background: linear-gradient(to bottom, #0687c2 0%,#015ea1 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0687c2', endColorstr='#015ea1',GradientType=0 );
+
+            color:rgb(241,241,241);
+            border-color:rgba(1, 94, 168, 1.0);
+        }
+
+
+    /*Alternative Styling */
+        :host([alternative]), :host-context([alternative]) {   
+            background-color: #e9e9e9;
+        }
+        :host([alternative][secondary]), :host-context([alternative])[secondary] {   
+            background-color: #f2f2f2;
+        }
+        :host-context([dark]), :host([dark]) {
+            background-color: #1f1f1f;
+            border-color:#111;
+            color: #f3f3f3;
+            box-shadow: none;
+        }
+        :host-context([dark])[secondary], :host([dark][secondary]) {   
+            background-color: #292929;
+            border-top: 1px solid #606060;
+        }
+        :host([status="callout"]){
+            background: #0e6eb8;
+            border: 1px solid #0e6eb8 !important;
+        }
+        :host([status="alarm"]){
+            background: #F33333 !important;
+            border: 1px solid #F33333 !important;
+        }
+        :host([status="disabled"]){
+            background: #983FEF !important;
+            border: 1px solid #983FEF !important;
+        }
+        :host([status="disarmed"]){
+            background: #1569E5 !important;
+            border: 1px solid #1569E5 !important;
+        }
+        :host([status="comm"]){
+            background: #FC7700 !important;
+            border: 1px solid #FC7700 !important;
+        }
+
+        /*TODO Make these stripes for host-context(EDIT) */
+        :host-context([edit]){
+            color: #333 !important;
+            background: #c1c1c1 !important;
+            border: 1px solid #d0d0d0 !important;
+        }
+        :host-context([edit])[status="callout"]{
+            box-shadow:inset 8px 0 0 #0e6eb8 !important;
+        }
+        :host-context([edit])[status="alarm"]{
+            box-shadow:inset 8px 0 0 #F33333 !important;
+        }
+        :host-context([edit])[status="disabled"]{
+            box-shadow:inset 8px 0 0 #983FEF !important;
+        }
+        :host-context([edit])[status="disarmed"]{
+            box-shadow:inset 8px 0 0 #1569E5 !important;
+        }
+        :host-context([edit])[status="comm"]{
+            box-shadow:inset 8px 0 0 #FC7700 !important;
+        }
+
+    /* Internals Styling */
+
+        :host #topBar{
+            box-sizing: border-box;
+            height: 100%;
+            @apply(--layout-horizontal);
+            @apply(--layout-center);
+        }        
+        :host([empty]) #topBar{
+            display: none!important;
+        }
+        :host #topBar ::content > iron-icon {
+            width:50px;
+            height: 50px;
+        }
+        /* make elements (e.g. buttons) respond to mouse/touch events */
+        :host #topBar ::content >*:not([disabled]) {
+            pointer-events: auto;
+        }
+        /* elements spacing */
+        :host #topBar ::content >*{
+            margin: 0 15px 0 0;
+        }
+        /* elements spacing */
+        :host #topBar ::content > *:last-child {
+            margin: 0;
+        }
+        /* misc helpers */
+        :host #topBar ::content > .fit {
+            position: absolute;
+            top: auto;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            width: auto;
+            margin: 0;
+        }
+        :host .indent {
+            margin-left: 60px;
+        }
+        :host #topBar ::content > .flex{
+            @apply(--layout-flex);
+        }
+
+
+    /* Stacked Styling*/
+        :host([stacked]) {
+            height: auto;
+            padding: 2.5%;
+        }
+        :host([stacked]) #topBar{
+            /*-ms-flex-direction:column;
+            -moz-flex-direction:column;
+            -webkit-flex-direction:column;
+            flex-direction:column;*/
+            @apply(--layout-vertical);
+        }
+        :host([stacked]) #topBar ::content px-button,
+        :host([stacked]) #topBar ::content px-checkbox,
+        :host([stacked]) #topBar ::content px-title,
+        :host([stacked]) #topBar ::content px-radio,
+        :host([stacked]) #topBar ::content px-icon-button    {
+            -webkit-flex:1;-ms-flex:1;flex:1;
+            width:100%;
+            margin:1% .5%;
+        }
+    </style>
+
+    <template>
+        <div id="topBar" class="actionContent">
+<!--             <content select="px-toggle"></content>
+            <content select="px-back-button:not([right])"></content> -->
+            <content></content>
+        </div>
+
+        <template if="{{stackable}}">
+            <iron-media-query
+            query="{{mq}}"
+            query-matches="{{stacked}}">
+            </iron-media-query>
+        </template>
+    </template>
+
+    <script>
+
+        Polymer({
+            is: "px-actionbar",
+            properties:{
+                mq:{
+                    type: String,
+                    value: "(max-width: 800px)"
+                },
+                stackable:{
+                    type: Boolean,
+                    value: false
+                },
+                //E.g. for Trendviewer sidebar
+                // alternative:{
+                //     type: Boolean;
+                //     value: false
+                // },
+                stacked:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                dark:{
+                    type: Boolean,
+                    value: false
+                },
+                secondary:{
+                    type: Boolean,
+                    value: false
+                },
+                empty:{
+                    type: Boolean,
+                    value: false
+                },
+                autosize:{
+                    type: Boolean,
+                    value: false
+                },
+                navigation:{
+                    type: Boolean,
+                    value: false
+                },
+                status:{
+                    type: String,
+                    value: null
+                },
+                bottom:{
+                    type: Boolean,
+                    value: false
+                }
+
+            }
+        });
+
+    </script>
+</dom-module>

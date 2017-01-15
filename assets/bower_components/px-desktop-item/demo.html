@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+        <title>Demo of px-item</title>
+        <script src="../webcomponentsjs/webcomponents.min.js"></script>
+        
+        <link rel="import" href="../px-desktop-menu/px-menu.html">
+        <link rel="import" href="../px-desktop-item/px-item.html">
+
+        <link rel="import" href="../px-icons/px-icons.html">
+        <style rel="import" href="../font-opensans/fontface.css"></style>
+        
+        <style>
+            * {
+                font-family: Open Sans, sans-serif;
+            }
+            body{
+                margin:10px;
+            }
+        </style>
+
+    </head>
+    <body unresolved>
+        <px-menu selectable>
+            <px-item value="1">Option 1</px-item>
+            <px-item value="1">Option 2</px-item>
+            <px-item value="1">Option 3</px-item>
+        </px-menu>
+        <br/><br/>
+        <px-menu dark selectable>
+            <px-item icon="px-icons:alarm" value="1">Option 1</px-item>
+            <px-item icon="px-icons:check" value="1">Option 2</px-item>
+            <px-item icon="px-icons:device" value="1">Option 3</px-item>
+        </px-menu>
+    </body>
+</html>

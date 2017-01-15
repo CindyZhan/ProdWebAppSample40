@@ -1,0 +1,91 @@
+
+
+<link href="../polymer/polymer.html" rel="import">
+
+<dom-module id="px-title">
+    <style>
+        :host {
+            width:auto;
+            white-space: nowrap; 
+            text-overflow:ellipsis;
+            overflow: hidden;
+        }
+        :host([right]) {
+            text-align: right;
+        }
+        :host {
+            text-align: {{align}};
+        }
+
+        :host .titleWrapper h1, 
+        :host .titleWrapper h2, 
+        :host .titleWrapper ::content h1, 
+        :host .titleWrapper ::content h2{
+            font-size: 14px; 
+            font-weight: 700; 
+            margin:0; 
+            color:inherit; 
+            white-space: nowrap; 
+            text-overflow:ellipsis;
+            overflow: hidden;
+        }
+        :host .titleWrapper h2, 
+        :host .titleWrapper ::content h2 {
+            font-weight: 400; 
+        }
+        :host([light]) .titleWrapper ::content h1,
+        :host([light]) .titleWrapper ::content h2{
+            font-weight: 400;
+        }
+        :host([lightsub]) .titleWrapper ::content h2 {
+            opacity: .75; 
+        }
+        :host .titleWrapper ::content .light {
+            font-weight: 400!important;
+        }
+    </style>
+    <template>
+        <div class="titleWrapper">
+            <h1 title="{{maintitle}}">{{maintitle}}</h1>
+            <h2 title="{{subtitle}}">{{subtitle}}</h2>
+
+            <content select="h1"></content>
+            <content select="h2"></content>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-title",
+            // hostAttributes:{
+            //     role: "header"
+            // },
+            properties:{
+                maintitle:{
+                    type: String,
+                    value: ''
+                },
+                subtitle:{
+                    type:String,
+                    value:''
+                },
+                light:{
+                    type: Boolean,
+                    value: false
+                },
+                lightsub:{
+                    type: Boolean,
+                    value: false
+                },
+                align:{
+                    type: String,
+                    value: null
+                },
+                right:{
+                    type: Boolean,
+                    value: false
+                }
+            }
+        });
+    </script>
+</dom-module>

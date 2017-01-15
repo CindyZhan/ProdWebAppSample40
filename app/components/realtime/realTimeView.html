@@ -1,0 +1,136 @@
+﻿<!-- Main Content Area & Action Bars -->
+<div class="flex layout vertical" style="min-width:0px; min-height:0px;">
+    <!-- Main Content -->
+    <div class="flex layout vertical" style="padding: 0; overflow-y:auto;">
+        <px-card-container setvertical="(max-width: 1600px)" horizontal>
+            <px-card-container vertical setvertical="(max-width: 200px)">
+                <px-card ng-init="realtime.getDeviceMeta()">
+                    <px-actionbar autosize>
+                        <px-title>
+                            <h1>Device Metadata </h1></px-title>
+                    </px-actionbar>
+                    <px-row>
+                        <px-column>
+                          <!--Ng-Model : errorMsg -->
+                            <px-title>
+                                <h1 style="color: red; position: absolute">{{realtime.errorMsg}}</h1></px-title>
+                        </px-column>
+                    </px-row>
+                    <px-row>
+                        <px-column>
+                            <px-title>
+                                <h1>Device Name</h1></px-title>
+                        </px-column>
+                        <px-column>
+                            <!-- Ng-Model : Device Name -->
+                            <px-title>
+                                <h1>{{realtime.deviceMeta[0].name}}</h1></px-title>
+                        </px-column>
+                    </px-row>
+                    <px-row>
+                        <px-column>
+                            <px-title>
+                                <h1>Device Model</h1></px-title>
+                        </px-column>
+                        <px-column>
+                            <!-- Ng-Model : Device Model -->
+                            <px-title>
+                                <h1>{{realtime.deviceMeta[0].model_lname}}</h1></px-title>
+                        </px-column>
+                    </px-row>
+
+                    <!-- Display Device UUID and Software (Firmware) version                                -->
+                    <!-- deviceMeta id and software have been assigned values from the JSON returned by     -->
+                    <!--      the REST API call to Get Device metadata.  The HTML implemented here binds    -->
+                    <!--      these values to the HTML control in the web app.  By navigating to the        -->
+                    <!--      folder "app/components/services" in your local repository, and viewing the    -->
+                    <!--      file deviceServiceProvider.js, you will find the Javascript code that is      -->
+                    <!--      implemented to construct the URL for the Get Device Rest API and make the     -->
+                    <!--      call to the IoT platform's REST API to retrieve metadata and parse the        -->
+                    <!--      response JSON.                                                                -->
+
+                    <!-- Uncomment these lines to display Device UUID and Software (Firmware) version -->
+                    <!--
+                    <px-row>
+                        <px-column>
+                            <px-title><h1>Device UUID</h1></px-title>
+                        </px-column>
+                        <px-column>
+                            <px-title><h1>{{realtime.deviceMeta[0].id}}</h1></px-title>
+                        </px-column>
+                    </px-row>
+                    <px-row>
+                        <px-column>
+                            <px-title><h1>Software </h1></px-title>
+                        </px-column>
+                        <px-column>
+                            <px-title><h1>{{realtime.deviceMeta[0].software}}</h1></px-title>
+                        </px-column>
+                    </px-row>
+                    -->
+
+                </px-card>
+                <px-card>
+                    <px-actionbar autosize>
+                        <px-title>
+                            <h1>Bacon Cape Slider </h1>
+                        </px-title>
+                    </px-actionbar>
+                    <px-row>
+                        <px-column>
+                            <!--Ng-Model : errorMsg -->
+                            <px-title>
+                                <h1 style="color: red; position: absolute">{{realtime.errorMsg}}</h1>
+                            </px-title>
+                        </px-column>
+                    </px-row>
+                    <px-row>
+                        <px-column style="width: 40%">
+                            <px-title>
+                                <h1>Bacon Cape Slider Channel</h1>
+                            </px-title>
+                        </px-column>
+                        <px-column style="width: 40%">
+                            <rzslider rz-slider-model="realtime.sliderOptions.value" rz-slider-high="realtime.sliderOptions.high" rz-slider-options="realtime.sliderOptions.options">{{realtime.sliderOptions.value}}</rzslider>
+                        </px-column>
+                        <px-column style="width: 20%">
+                            {{realtime.sliderOptions.value}}
+                        </px-column>
+                    </px-row>
+                </px-card>
+            </px-card-container>
+        </px-card-container>
+    </div>
+</div>
+<px-sidebar dark autosize ng-init="realtime.getRealtimeData()">
+    <px-actionbar>
+        <px-title><h1>Realtime Data </h1></px-title>
+    </px-actionbar>
+    <px-row>
+        <px-column>
+            <!--Ng-Model  : errorMsg   -->
+            <px-title ><h1 style="color:red; white-space:normal">{{realtime.errorMsgRealtime}}</h1></px-title>
+        </px-column>
+    </px-row>
+     <!--Ng-model realData : {"tag":"Current","value":"45.00","time":"16:89:00"} -->
+    <px-row>
+        <px-column>Channel Name</px-column>
+        <px-column>Value </px-column>
+        <px-column>Time</px-column>
+    </px-row>
+     <px-row ng-repeat="item in realtime.realData">
+        <px-column>{{item.tag}}</px-column>
+        <px-column>{{item.value|number : 3}}</px-column>
+        <px-column>{{item.time|date:'HH:mm:ss'}}</px-column>
+
+    </px-row>
+    <!-- Use normal table if the performance for above grid is worst-->
+    <!--<table style="table-layout:fixed">
+        <tr ng-repeat="item in realtime.realData">
+            <td style="word-wrap:break-word;color:white;max-width:120px;padding-left:0.5em">{{item.tag}}</td>
+            <td style="color:white;width:100px">{{item.value|number:3}}</td>
+            <td style="color:white;width:auto;padding-left:1em">{{item.time|date:'HH:mm:ss'}}</td>
+        </tr>
+    </table>-->
+
+</px-sidebar>

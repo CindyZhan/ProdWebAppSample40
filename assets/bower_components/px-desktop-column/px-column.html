@@ -1,0 +1,235 @@
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-icons/iron-icons.html" rel="import">
+<link href="../px-icons/px-icons.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+
+<dom-module id="px-column">
+	<style>
+
+	/* Base Styling */
+		:host{
+
+			-webkit-flex:1;
+			-ms-flex:1;
+			flex:1;
+
+			-webkit-align-self:center;
+			-ms-flex-item-align:center;
+			align-self:center;
+
+			box-sizing: border-box;
+		}
+		/*:host([action]) {
+			text-align: center;
+		}*/
+		:host([active]) {
+			color:#f33333;
+		}
+		:host([icon]) {
+			-webkit-flex: none!important;
+			-ms-flex: none!important;
+			flex:none!important;
+		}
+		:host([icon]) .columnWrapper {
+			width: 30px;
+			padding: 0px;
+		}
+/*		:host([action]){
+			padding: 0px 10px;
+		}*/
+/*		:host([title]), :host([namevalue]) {
+			padding:15px 10px;
+		}*/
+		:host([space]){
+			-webkit-flex: none!important;
+			-ms-flex: none!important;
+			flex:none!important;
+		}
+		:host([value]) {
+			word-wrap:break-word;
+		}
+		:host([alarm]){
+			color: #f33333;
+		}
+		:host([helper]) {
+			color: #a0a0a0;/*rgba(0,0,0,.35);*/
+			font-weight: 400;
+		}
+		/*:host([value]){
+			text-align: right;
+		}*/
+		:host([right]) {
+			text-align: right;
+		}
+		:host([left]) {
+			text-align: left;
+		}
+		:host-context([selected]):host([helper]) {
+			color: #f3f3f3;
+		}
+
+
+	/* Flex Layout Styling */
+		:host([width]){
+			--col-width: 1;
+			-webkit-flex: var(--col-width);
+			-ms-flex: var(--col-width);
+			flex:var(--col-width);
+			/*flex-basis: 0 !important;*/
+		}
+		:host([width="0"]) {
+			-webkit-flex: none !important;
+			-ms-flex: none !important;
+			flex: none !important;
+		}
+
+
+	/* Spacer Width Styling */
+		:host([space]){
+			--space-width: 0;
+			width: var(--space-width);
+		}
+
+
+	/* Internal Styles */
+		:host .columnWrapper {
+			padding: 15px 10px;
+		}
+		:host([space]) .columnWrapper{
+			padding: 0!important;`
+		}
+		:host([helper]) .columnWrapper {
+			padding-right: 10px;
+		}
+
+		:host([stack]) .columnWrapper{
+			@apply(--layout-vertical);
+		}
+		:host .columnWrapper iron-icon {
+			width:20px!important; 
+			margin-right:4px;
+			/*display: none!important;*/
+		}
+		:host .columnWrapper ::content .row-stamp {
+			text-transform: uppercase;
+			opacity: .65; 
+			font-weight: 700;
+			font-size: 16px;
+			width: 100%;
+			text-align: center;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			display: inline-block;
+		}
+		:host .columnWrapper ::content px-button:not([fixedWidth]),
+		:host .columnWrapper ::content px-input:not([fixedWidth]),
+		:host .columnWrapper ::content px-dropdown-menu:not([fixedWidth]) {
+			width:100%;
+			-webkit-flex: 1;-ms-flex: 1;flex: 1;
+			min-width: 0;
+		}
+		:host([stack]) .columnWrapper ::content span:not(:last-child){
+			width: 100%;
+			word-wrap: break-word;
+		}
+		:host([stack]) .columnWrapper ::content px-button:not([fixedWidth]):not(:last-child),
+		:host([stack]) .columnWrapper ::content px-input:not([fixedWidth]):not(:last-child),
+		:host([stack]) .columnWrapper ::content px-dropdown-menu:not([fixedWidth]):not(:last-child),
+		:host([stack]) .columnWrapper ::content span:not(:last-child){
+			margin-bottom: 10px;
+		}
+		:host([namevalue]) .columnWrapper ::content px-title /deep/ h2 {
+            opacity: .75; 
+        }
+
+	</style>
+	<template>
+		<div class="columnWrapper">
+			<template is="dom-if" if="{{helper}}">
+				<iron-icon icon="px-icons:information"></iron-icon>
+			</template>
+
+			<content></content>
+		</div>
+	</template>
+
+	<script>
+	Polymer({
+		is: "px-column",
+		properties:{
+			action:{
+				type: Boolean,
+				value: false
+			},
+			active:{
+				type: Boolean,
+				value: false
+			},
+			icon:{
+				type: Boolean,
+				value: false
+			},
+			title:{
+				type: Boolean,
+				value: false
+			},
+			namevalue:{
+				type: Boolean,
+				value: false
+			},
+			helper:{
+				type: Boolean,
+				value: false
+			},
+			value:{
+				type: Boolean,
+				value: false
+			},
+			right:{
+				type: Boolean,
+				value: false
+			},
+			left:{
+				type: Boolean,
+				value: false
+			},
+			alarm:{
+				type: Boolean,
+				value: false
+			},
+			width:{
+				type: Number,
+				value: 1,
+				observer: '_updateWidth'
+			},
+			space:{
+				type: Number,
+				value: null,
+				observer: '_updateSpace'
+			},
+			stack:{
+				type: Boolean,
+				value:false
+			}
+		},
+		_updateWidth: function(){
+				var val = 1;
+				if(!isNaN(parseInt(this.width))){
+					val = Math.floor(parseInt(this.width));
+				}
+				val = (val===0)?"none":val;
+				this.customStyle['--col-width'] = val.toString();
+				this.updateStyles();
+		},
+		_updateSpace: function(){
+				var val = 0;
+				if(!isNaN(parseInt(this.space))){
+					val = Math.floor(parseInt(this.space));
+				}
+				this.customStyle['--space-width'] = val+"px";
+				this.updateStyles();
+		}
+	});
+	</script>
+</dom-module>

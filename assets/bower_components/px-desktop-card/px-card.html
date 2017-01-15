@@ -1,0 +1,141 @@
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-card">
+
+    <style>
+    /* Base Styling */
+        :host{
+            @apply(--layout-vertical);
+            -webkit-flex: 1;-ms-flex: 1;flex: 1;
+            -webkit-flex-basis: 0;-ms-flex-preferred-size: 0;flex-basis: 0;
+            margin: 15px;
+
+            box-shadow: 0 2px 10px rgba(0,0,0,.10);
+        }
+        :host .card-wrapper{
+            @apply(--layout-vertical);
+            -webkit-flex: 1;-ms-flex: 1;flex: 1;
+            overflow: hidden;
+        }
+        :host([fixed]){
+            -webkit-flex: none;-ms-flex: none;flex: none;
+        }
+    /* Style Internals */
+        :host .card-header{
+            -webkit-flex: none;-ms-flex: none;flex: none;
+        }
+        :host .card-header ::content px-actionbar{
+            background: #2f2f2f; /* Old browsers */
+            background: -moz-linear-gradient(top, #2f2f2f 0%, #171717 100%); /* FF3.6+ */
+            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#2f2f2f), color-stop(100%,#171717)); /* Chrome,Safari4+ */
+            background: -webkit-linear-gradient(top, #2f2f2f 0%,#171717 100%); /* Chrome10+,Safari5.1+ */
+            background: -o-linear-gradient(top, #2f2f2f 0%,#171717 100%); /* Opera 11.10+ */
+            background: -ms-linear-gradient(top, #2f2f2f 0%,#171717 100%); /* IE10+ */
+            background: linear-gradient(to bottom, #2f2f2f 0%,#171717 100%); /* W3C */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2f2f2f', endColorstr='#171717',GradientType=0 ); /* IE6-9 */
+
+            border: 1px solid #171717;
+            padding: 0 25px;
+            box-shadow: none;
+            color: #f3f3f3;
+        }
+        :host .card-header ::content px-actionbar[autosize]{
+            padding: 15px 25px;
+        }
+
+        :host .card-body {
+            background: #fff;
+            border: 1px solid #c1c1c1;
+            border-top-width: 0;
+
+            -webkit-flex: 1;-ms-flex: 1;flex: 1;
+            overflow-y: auto;
+        }
+    </style>
+
+    <template>
+        <div class="card-wrapper">
+            <div class="card-header">
+                <content select="px-actionbar"></content>
+            </div>
+            <div class="card-body">
+                <content></content>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-card",
+            properties: {
+            /**
+             * Uses media query to set breakpoint
+             *
+             * @attribute primary
+             * @type string
+             * @default false
+             */
+                mq: {type:String, value:"max-width: 500px"},
+
+            /**
+             * If true, the button will be dark. Used in sidebars
+             *
+             * @attribute dark
+             * @type boolean
+             * @default false
+             */
+                dark: {type:Boolean, value:false},
+
+            /**
+             * If it exists, use as a default style header.
+             *
+             * @attribute header
+             * @type string
+             * @default ''
+             */
+                header: {type:String},
+
+            /**
+             * If true, only display the header and more button
+             *
+             * @attribute headerOnly
+             * @type boolean
+             * @default false
+             */
+                headerOnly: {type:Boolean, value:false, reflectToAttribute:true},
+
+            /**
+             * if exists, use as an icon in the header
+             *
+             * @attribute icon
+             * @type string
+             * @default null
+             */
+                icon: String,
+
+            /**
+             * if exists, use as the label for the more button e.g. "All Channels"
+             *
+             * @attribute moreLabel
+             * @type string
+             * @default "More"
+             */
+                width: {type:String},
+
+                fixed:{
+                    type: Boolean,
+                    value: false
+                },
+
+                thin:{
+                    type: Boolean,
+                    value: false
+                }
+
+            }
+        });
+    </script>
+</dom-module>

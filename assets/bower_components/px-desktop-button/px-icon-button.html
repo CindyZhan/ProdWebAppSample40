@@ -1,0 +1,126 @@
+<!--
+    @license
+    Copyright (c) 2014 The Polymer Project Authors. All rights reserved.
+    This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+    The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+    The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+    Code distributed by Google as part of the polymer project is also
+    subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<!--
+A humble button. Content of the button will be used as title. Icon attribute sets the icon. Can use attributes such as dark, negative, positive, primary and chameleon to change the visual display of the element. 
+
+##### Example
+
+    <px-icon-button icon="px-icons:favorite">Favorite</px-button>
+
+@element px-button
+@blurb A humble button. Content of the button will be used as title. Icon attribute sets the icon. Can use attributes such as dark, negative, positive, primary and chameleon to change the visual display of the element. 
+@status alpha
+@homepage http://eatonuxd.com
+-->
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-icon/iron-icon.html" rel="import">
+<link href="../iron-media-query/iron-media-query.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+<link href="../../fonts/open-sans/fontface.css" rel="import">
+
+
+<dom-module id="px-icon-button">
+    <style>
+        /* Style for the buttons */
+            :host {
+                display: block;
+                position: relative;
+                box-sizing: border-box;
+
+                padding: 0;
+
+                text-align: center;
+
+                outline: none;
+                border-radius: 0px;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: pointer;
+                z-index: 0;
+
+                color:#606060;
+
+                min-width: 20px;
+                width: 20px;
+                height: 20px;
+                background: transparent!important;
+                border: none!important;
+                box-shadow: none!important;
+            }
+            :host([dark]), :host-context([dark]){
+                color: #f3f3f3;
+            }
+            :host(:hover), :host(:focus), :host([active]), :host(:active){
+                opacity: 0.75;
+            }
+            :host(:hover[dark]), :host(:focus[dark]), :host(:active[dark]), :host([active][dark]),
+            :host-context([dark]):hover, :host-context([dark]):focus, :host-context([dark]):active, :host-context([dark])[active]{
+                opacity: 1;
+                color: #e0e0e0;
+            }
+
+
+    /* Style the internals */
+            :host #button-content {
+                height: 100%;
+                width: 100%;
+                @apply(--layout-horizontal);
+                @apply(--layout-center-center);
+            }
+            :host iron-icon {
+                max-width: 20px;
+                max-height: 20px;
+                width: 20px;
+                height: 20px;
+                margin: 0;
+            }
+    </style>
+
+    <template>
+        <div id="button-content">
+            <iron-icon id="icon" icon="{{icon}}"></iron-icon>
+        </div>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-icon-button",
+            listeners:{
+                up: 'clearFocus'
+            },
+            clearFocus: function(event, detail, sender){
+                this.blur();
+            },
+            hostAttributes:{
+                role: "button",
+                tabindex: 0
+            },
+            properties:{
+                icon: {
+                    type: String,
+                    value: "px-icons:remove"
+                },
+                dark: {
+                    type:Boolean,
+                    value: false
+                },
+                active: {
+                    type:Boolean,
+                    value: false
+                }
+            }
+        });
+    </script>
+</dom-module>

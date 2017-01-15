@@ -1,0 +1,180 @@
+
+
+<link href="../polymer/polymer.html" rel="import">
+<link href="../iron-flex-layout/iron-flex-layout.html" rel="import">
+
+<dom-module id="px-pocket">
+    <style>
+    /* Base Styling */
+        :host {
+            width: 375px;
+            display:block;
+            padding:15px 25px 0px 25px;
+            box-sizing:border-box;
+            background-color: rgba(241,240,240,.9);
+            box-shadow:inset 0 1px 0px rgba(255,255,255,.05), 0 -8px 20px -6px rgba(0,0,0,.25);
+            border: 1px solid #c1c1c1;
+            border-left:0;
+            border-bottom:0;
+        }
+
+        :host([dark]), :host-context([dark]) {
+            background:rgba(33,33,33,.9);
+            border-color: rgba(0,0,0,.25);
+            box-shadow:inset 0 1px 0px rgba(255,255,255,.05), 0 -8px 20px -6px rgba(0,0,0,.65);
+            color: #f3f3f3;
+        }
+
+        :host #pocketWrapper{
+            @apply(--layout-vertical);
+        }
+
+        :host px-dropdown-menu {
+            width:100%;
+            padding: 0 25px;
+            margin-bottom: 15px;
+        }
+
+        :host #pocketWrapper ::content > px-dropdown-menu,
+        :host #pocketWrapper ::content > px-button {
+            width:100%;
+            margin-bottom: 15px;
+        }
+
+        :host #pocketWrapper ::content px-title{
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+/*        :host([dark]) ::content px-title{
+
+        }*/
+
+/* Collapsed Styles */
+        :host([collapse]) px-dropdown {
+            max-width:325px;
+            width:325px!important;
+            box-shadow: 0px 1px 20px rgba(0,0,0,.125);
+            top:auto!important;
+            bottom:48px!important;
+        }
+
+        :host([collapse]) px-dropdown /deep/ px-button /deep/ .button-content{
+            text-align: left!important;
+            -webkit-align-items:left!important;
+            -ms-flex-align:left!important;
+            align-items:left!important;
+
+            -webkit-justify-content:left!important;
+            -ms-flex-pack:left!important;
+            justify-content:left!important;
+
+            padding-left: 15px;
+        }
+
+        :host([collapse]) content[select="px-button"]::content px-button {
+            box-shadow: 0;
+            border-bottom:0;
+            background: #fff;
+        }
+
+        :host([collapse]) #pocketWrapper ::content px-button[primary],
+        :host([collapse]) #pocketWrapper ::content px-button[positive],
+        :host([collapse]) #pocketWrapper ::content px-button[negative] {
+            color:#676767!important;
+            border-color: #c1c1c1!important;
+        }
+
+        :host([collapse]) #pocketWrapper ::content px-button[primary],
+        :host([collapse]) #pocketWrapper ::content px-button[positive] {
+            box-shadow: inset 8px 0px 0px #005fa2;
+        }
+
+        :host([collapse]) #pocketWrapper ::content px-button[negative] {
+            box-shadow: inset 8px 0px 0px #c50404;
+        }
+
+        :host([dark][collapse]) #pocketWrapper ::content px-button,
+        :host-context([dark])[collapse] #pocketWrapper ::content px-button {
+            background: #333!important;
+            color:rgba(255,255,255,.95);
+            border-color:#161616;
+        }
+
+        :host([collapse]) #pocketWrapper ::content px-button::shadow .button-content {
+            text-align: left!important;
+            -webkit-align-items:left!important;
+            -ms-flex-align:left!important;
+            align-items:left!important;
+
+            -webkit-justify-content:left!important;
+            -ms-flex-pack:left!important;
+            justify-content:left!important;
+
+            padding-left: 15px;
+        }
+
+        :host([collapse]) #pocketWrapper ::content > * {
+            width:310px;
+            margin:0;
+        }
+    </style>
+
+    <template>
+        <div id="pocketWrapper">
+        <!-- if it is collapsed, show choose an action menu -->
+<!--             <template is="dom-if" if="{{collapse}}" restamp="true">
+                <px-dropdown-menu dark?="{{dark}}" label="{{label}}">
+                    <px-dropdown dark?="{{dark}}" class="dropdown">
+                        <iron-selector>
+                            <content select="px-button"></content>
+                        </iron-selector>
+                    </px-dropdown>
+                </px-dropdown-menu>
+            </template> -->
+
+        <!-- if it isnt' collapsed, just show the buttons -->
+            <template is="dom-if" if="{{!collapse}}" restamp="true">
+                <content select="px-title"></content>
+                <content select="px-button"></content>
+            </template>
+        </div>
+
+        <iron-media-query
+        query="{{mq}}"
+        query-matches="{{collapse}}">
+        </iron-media-query>
+    </template>
+
+    <script>
+        Polymer({
+            is: "px-pocket",
+            properties:{
+                mq:{
+                    type: String,
+                    value: "(max-height: 500px)"
+                },
+                dark:{
+                    type: Boolean,
+                    value: false
+                },
+                collapse:{
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+                // notcollapse:{
+                //     type: Boolean,
+                //     computed: 'not(collapse)'
+                // },
+                // label:{
+                //     type: String,
+                //     value: "Choose an Action"
+                // }
+            },
+            // not: function(val) {
+            //     return !val;
+            // }
+        });
+    </script>
+</dom-module>
