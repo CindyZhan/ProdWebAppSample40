@@ -3,74 +3,42 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>IoT WebApp</title>
+    <title>PowerXpert White BBB App</title>
 
     <script src="assets/bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
     <script>
         window.Polymer = window.Polymer || {};
         window.Polymer.dom = 'shadow';
-
-
     </script>
-
     <link rel="import" href="assets/html/elements.html" />
     <link rel="stylesheet" href="assets/css/rzslider.css" />
 	  <script src="assets/scripts/jquery-2.1.3.min.js"></script>
     <script src="assets/scripts/angular-polymer.js"></script>
     <script src="assets/scripts/angular-route.js"></script>
+    <script src="assets/scripts/ngCookies.js"></script>
     <script src="assets/scripts/angular-local-storage.js"></script>
-    <script src="assets/scripts/adal.js"></script>
-    <script src="assets/scripts/adal-angular.js"></script>
     <script src="app/app.route.js"></script>
     <script src="app/app.module.js"></script>
     <script src="assets/scripts/rzslider.js"></script>
-    <script src="app/components/authentication/loginController.js"></script>
-    <script src="app/components/services/channelServiceProvider.js"></script>
-    <script src="app/components/shared/channelMetaInstance.js"></script>
-    <script src="app/components/services/commandServiceProvider.js"></script>
-    <script src="app/components/services/deviceServiceProvider.js"></script>
-    <script src="app/components/services/realtimeServiceProvider.js"></script>
-    <script src="app/components/realtime/realtimeController.js"></script>
-    <script src="app/components/services/timeseriesServiceProvider.js"></script>
-    <script src="app/components/timeseries/timeseriesController.js"></script>
-	<script src="app/components/deviceCommand/commandController.js"></script>
+    <script src="app/services/loginServiceProvider.js"></script>
+    <script src="app/login/loginController.js"></script>
+    <script src="app/services/channelServiceProvider.js"></script>
+    <script src="app/services/channelMetaInstance.js"></script>
+    <script src="app/services/deviceServiceProvider.js"></script>
+    <script src="app/services/realtimeServiceProvider.js"></script>
+    <script src="app/realtime/realtimeController.js"></script>
+    <script src="app/services/timeseriesServiceProvider.js"></script>
+    <script src="app/timeseries/timeseriesController.js"></script>
+    <script src="app/services/commandServiceProvider.js"></script>
+    <script src="app/command/commandController.js"></script>
+    
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-
-
-
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="assets/scripts/ng-polymer-elements.js"></script>
 
 </head>
 <body unresolved>
-
-    <!-- Header Bar -->
-    <px-navigation-container drawer>
-        <px-navigation extra ng-controller="loginController" ng-init="firstLoadPage()">
-            <span class="flex"></span>
-
-            <px-tab>{{username}}</px-tab>
-            <px-tab ng-click="process()">{{action}}</px-tab>
-            <px-tab>
-                <svg viewBox="0 0 60 16" x="0" y="0" height="18px" fill="#f3f3f3">
-                    <path class="icon-eaton" d="M19.1,3.1l1.4,5.2h-3L19.1,3.1z M16.5,11.9l-1.3,4.3h7.6l-1.2-4.3H16.5z M36.4,0H21.8v4.6h4.6v11.5h7.4
-                        c-0.5-0.3-3.6-2.8-3.6-7.5C30.2,4.8,32.6,1,36.4,0 M38.9,12c1.7,0,3.1-1.4,3.1-3.2c0-1.8-1.3-3.4-3-3.4c-1.8,0-3.1,1.6-3.1,3.4
-                        C35.9,10.6,37.2,12,38.9,12 M54.3,10.1L51.3,0h-7.6v16.1h4.7V6h0l2.9,10.1h7.7V0h-4.8L54.3,10.1L54.3,10.1z M9.2,16.1l1.4-4.5H5.5
-                        v-1.4H11l1.3-4.3H5.5V4.6h7.2L14.1,0H0v16.1H9.2z" />
-                </svg>
-            </px-tab>
-        </px-navigation>
-
-        <!-- Primary Navigation -->
-        <px-navigation>
-            <px-tab icon="px-icons:oneline"><a href="./#/realtime" style="color:white; border-bottom:none">Realtime</a></px-tab>
-            <px-tab icon="px-icons:trend"><a href="./#/timeseries" style="color:white;border-bottom:none">TimeSeries</a></px-tab>
-            <px-tab icon="px-icons:deviceCommand"><a href="/#/deviceCommand" style="color:white;border-bottom:none">Commands</a></px-tab>
-            </px-navigation>
-    </px-navigation-container>
-
-
-    <div class="layout horizontal content" ng-view="">
-
+    <div class="content" ng-view="">
     </div>
 
 </body>

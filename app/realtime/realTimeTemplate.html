@@ -1,10 +1,31 @@
-﻿<!-- Main Content Area & Action Bars -->
-<div class="flex layout vertical" style="min-width:0px; min-height:0px;">
+﻿
+<px-navigation-container drawer>
+        <px-navigation extra >
+            <span class="flex"></span>
+             <px-tab icon="px-icons:oneline" ng-class="realtime.activeTab('realtime')"><a href="./#/realtime" style="color:white; border-bottom:none">Realtime</a></px-tab>
+            <px-tab icon="px-icons:trend" ><a href="./#/timeseries" style="color:white;border-bottom:none">TimeSeries</a></px-tab>
+            <px-tab icon="px-icons:command" ><a href="./#/command" style="color:white;border-bottom:none">Command</a></px-tab>
+            <px-tab>{{username}}</px-tab>
+            <px-tab ng-click="realtime.logout()">Log Out</px-tab>
+             <px-tab style="width:60px;height:20px">
+                <svg viewBox="0 0 60 16" x="0" y="0" height="18px" fill="#f3f3f3">
+                    <path class="icon-eaton" d="M19.1,3.1l1.4,5.2h-3L19.1,3.1z M16.5,11.9l-1.3,4.3h7.6l-1.2-4.3H16.5z M36.4,0H21.8v4.6h4.6v11.5h7.4
+                        c-0.5-0.3-3.6-2.8-3.6-7.5C30.2,4.8,32.6,1,36.4,0 M38.9,12c1.7,0,3.1-1.4,3.1-3.2c0-1.8-1.3-3.4-3-3.4c-1.8,0-3.1,1.6-3.1,3.4
+                        C35.9,10.6,37.2,12,38.9,12 M54.3,10.1L51.3,0h-7.6v16.1h4.7V6h0l2.9,10.1h7.7V0h-4.8L54.3,10.1L54.3,10.1z M9.2,16.1l1.4-4.5H5.5
+                        v-1.4H11l1.3-4.3H5.5V4.6h7.2L14.1,0H0v16.1H9.2z" />
+                </svg>
+            </px-tab>
+        </px-navigation>
+        <px-navigation style="height:30px">           
+            </px-navigation>
+    </px-navigation-container>
+<div class="content layout horizontal">
+<!-- Main Content Area & Action Bars -->
+
     <!-- Main Content -->
-    <div class="flex layout vertical" style="padding: 0; overflow-y:auto;">
-        <px-card-container setvertical="(max-width: 1600px)" horizontal>
-            <px-card-container vertical setvertical="(max-width: 200px)">
-                <px-card ng-init="realtime.getDeviceMeta()">
+    <div class="flex layout vertical" style="padding: 0; overflow-y:visible;" style="height:98vh">
+        <px-card-container setvertical="(max-width: 1600px)" horizontal style="height:100%" >
+                <px-card ng-init="realtime.init()" style="height:60%">
                     <px-actionbar autosize>
                         <px-title>
                             <h1>Device Metadata </h1></px-title>
@@ -12,8 +33,7 @@
                     <px-row>
                         <px-column>
                           <!--Ng-Model : errorMsg -->
-                            <px-title>
-                                <h1 style="color: red; position: absolute">{{realtime.errorMsg}}</h1></px-title>
+                                <span class="px-error" ng-if="hasError"><i class="material-icons" style="color:red;font-size:14px;">&#xe002;</i> {{errorMsg}}</span>
                         </px-column>
                     </px-row>
                     <px-row>
@@ -23,8 +43,7 @@
                         </px-column>
                         <px-column>
                             <!-- Ng-Model : Device Name -->
-                            <px-title>
-                                <h1>{{realtime.deviceMeta[0].name}}</h1></px-title>
+                                {{deviceMeta.name}}
                         </px-column>
                     </px-row>
                     <px-row>
@@ -34,8 +53,7 @@
                         </px-column>
                         <px-column>
                             <!-- Ng-Model : Device Model -->
-                            <px-title>
-                                <h1>{{realtime.deviceMeta[0].model_lname}}</h1></px-title>
+                               {{deviceMeta.model_lname}}
                         </px-column>
                     </px-row>
 
@@ -50,13 +68,13 @@
                     <!--      response JSON.                                                                -->
 
                     <!-- Uncomment these lines to display Device UUID and Software (Firmware) version -->
-                    <!--
+                  
                     <px-row>
                         <px-column>
                             <px-title><h1>Device UUID</h1></px-title>
                         </px-column>
                         <px-column>
-                            <px-title><h1>{{realtime.deviceMeta[0].id}}</h1></px-title>
+                            {{deviceMeta.id}}
                         </px-column>
                     </px-row>
                     <px-row>
@@ -64,13 +82,12 @@
                             <px-title><h1>Software </h1></px-title>
                         </px-column>
                         <px-column>
-                            <px-title><h1>{{realtime.deviceMeta[0].software}}</h1></px-title>
+                           {{deviceMeta.software}}
                         </px-column>
                     </px-row>
-                    -->
-
+                   
                 </px-card>
-                <px-card>
+                <px-card style="height:50%">
                     <px-actionbar autosize>
                         <px-title>
                             <h1>Bacon Cape Slider </h1>
@@ -80,7 +97,7 @@
                         <px-column>
                             <!--Ng-Model : errorMsg -->
                             <px-title>
-                                <h1 style="color: red; position: absolute">{{realtime.errorMsg}}</h1>
+                                <p class="px-error" style="color:white"><i class="material-icons" style="color:white;font-size:14px;">&#xe002;</i>{{realtime.errorMsg}}</p>
                             </px-title>
                         </px-column>
                     </px-row>
@@ -91,25 +108,26 @@
                             </px-title>
                         </px-column>
                         <px-column style="width: 40%">
-                            <rzslider rz-slider-model="realtime.sliderOptions.value" rz-slider-high="realtime.sliderOptions.high" rz-slider-options="realtime.sliderOptions.options">{{realtime.sliderOptions.value}}</rzslider>
+                            <rzslider rz-slider-model="sliderOptions.value" rz-slider-high="sliderOptions.high" rz-slider-options="sliderOptions.options">{{sliderOptions.value}}</rzslider>
                         </px-column>
                         <px-column style="width: 20%">
-                            {{realtime.sliderOptions.value}}
+                            {{sliderOptions.value}}
                         </px-column>
                     </px-row>
                 </px-card>
-            </px-card-container>
+          
         </px-card-container>
-    </div>
+    
 </div>
-<px-sidebar dark autosize ng-init="realtime.getRealtimeData()">
+
+<px-sidebar dark autosize  style="height:90vh" >
     <px-actionbar>
         <px-title><h1>Realtime Data </h1></px-title>
     </px-actionbar>
     <px-row>
         <px-column>
-            <!--Ng-Model  : errorMsg   -->
-            <px-title ><h1 style="color:red; white-space:normal">{{realtime.errorMsgRealtime}}</h1></px-title>
+            <!--Ng-Model  : errorMsg   -->  
+        <span class="px-error" ng-if="hasrealtimeError"  style="color:white"><i class="material-icons" style="color:white;font-size:18px;">&#xe002;</i> {{realtimeMessage}}</span>
         </px-column>
     </px-row>
      <!--Ng-model realData : {"tag":"Current","value":"45.00","time":"16:89:00"} -->
@@ -118,19 +136,12 @@
         <px-column>Value </px-column>
         <px-column>Time</px-column>
     </px-row>
-     <px-row ng-repeat="item in realtime.realData">
+     <px-row ng-repeat="item in realtimeData">
         <px-column>{{item.tag}}</px-column>
-        <px-column>{{item.value|number : 3}}</px-column>
-        <px-column>{{item.time|date:'HH:mm:ss'}}</px-column>
+        <px-column>{{item.value|number:3}}</px-column>
+         <px-column>{{item.time|date:'HH:mm:ss'}}</px-column>
 
     </px-row>
-    <!-- Use normal table if the performance for above grid is worst-->
-    <!--<table style="table-layout:fixed">
-        <tr ng-repeat="item in realtime.realData">
-            <td style="word-wrap:break-word;color:white;max-width:120px;padding-left:0.5em">{{item.tag}}</td>
-            <td style="color:white;width:100px">{{item.value|number:3}}</td>
-            <td style="color:white;width:auto;padding-left:1em">{{item.time|date:'HH:mm:ss'}}</td>
-        </tr>
-    </table>-->
 
 </px-sidebar>
+</div>

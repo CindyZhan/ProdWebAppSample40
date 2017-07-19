@@ -1,0 +1,130 @@
+﻿  <div  ng-init="init()" class="px-login-blue">
+     
+ <div class="px-center-div">
+         
+ <form ng-submit="login()">
+              
+              
+      
+        <div class="row">
+                          
+          <div class="col-xs-12">
+                         
+               <!-- bootstrapgridcell -->
+                     
+                   <h3 class="px-title">
+PowerXpert White BBBApp
+</h3>
+ </div>
+        
+                        </div>
+                                
+<div class="row">
+                                    
+<div class="col-xs-12">
+                                  
+      <!-- bootstrapgridcell -->
+                                     
+   <p ng-if="hasError" class="px-login-error">
+                         
+                   {{loginmessage}}
+       </p>
+          
+                          </div>
+                                    
+<div class="col-xs-12">
+                                   
+ </div>
+                               
+ </div>
+                                
+<div class="row">
+                                    
+<div class="col-xs-0">
+                                       
+ <!-- bootstrapgridcell -->
+                                       
+ <p class="px-input-label">
+Username
+   </p>
+                                
+    </div>
+                               
+ </div>
+                               
+ <div class="row">
+                             
+       <div class="col-xs-0">
+                                 
+       <input type="text" value="" placeholder="" ng-model="username" class="px-input input-lg"
+        name="">
+          
+                          </div>
+                            
+    </div>
+                               
+ <div class="row">
+                                
+    <div class="col-xs-12">
+                           
+         </div>
+                               
+ </div>
+                               
+ <div class="row">
+                                
+    <div class="col-xs-0">
+                                        
+<!-- bootstrapgridcell -->
+     Password
+ </p>
+                                  
+  </div>
+                            
+    </div>
+                              
+  <div class="row">
+                                 
+   <div class="col-xs-0">
+                                 
+       <input type="password" value="" placeholder="" ng-model="password" class="px-input input-lg"
+     name="">
+   
+                                 </div>
+                               
+ </div>
+                               
+ <div class="row">
+                             
+       <div class="col-xs-12">
+                           
+         </div>
+                               
+ </div>
+                           
+     <div class="row">
+               
+                     <div class="col-xs-0">
+     
+                                   <button ng-click="login()" class="px-login-button btn-block btn btn-" type="submit">
+   Log In
+        </button>
+                     
+               </div>
+                                </div>
+                            
+          </form>
+    </div>
+    </div>
+
+
+<div class="px-footer px-black">
+ 
+ <div class="px-black logo col-xs-6" style="width: 53%;height: 100%;">
+     
+   <div ng-include ="'../../assets/images/eaton-full.svg'" style="padding-top:6px"></div>
+  </div>
+        
+<div class="px-black logo col-xs-6" style="width: 43%;height: 100%;"><p class="px-footer-title">PowerXpert White BBB App<sup>TM</sup></p><p class="px-footer-subtitle">© Copyright 2017 Eaton. All rights Resevred.</p>
+        </div></div>
+

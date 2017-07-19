@@ -9,23 +9,26 @@ var IoTApp;
              * Provider to direct user to correct HTML and JS code based on their URL extension
              **/
             $routeProvider.when("/realtime", {
-                controller: "IoTApp.controllers.RealtimeController",
-                templateUrl: "./app/components/realtime/realtimeView.html",
+                controller: "RealtimeController",
+                templateUrl: "./app/realtime/realtimeTemplate.html",
                 controllerAs: "realtime"
             }).when("/timeseries", {
-                controller: "IoTApp.controllers.TimeSeriesController",
-                templateUrl: "./app/components/timeseries/timeseriesView.html",
+                controller: "TimeSeriesController",
+                templateUrl: "./app/timeseries/timeseriesTemplate.html",
                 controllerAs: "timeseries"
-            }).when("/deviceCommand",
-			{
-				controller: "IoTApp.controllers.CommandController",
-				templateUrl: "app/components/deviceCommand/CommandView.html",
-				controllerAs: "command"
-			});
+            }).when("/login",{
+                 controller: "Login",
+                templateUrl: "./app/login/loginTemplate.html",
+                controllerAs: "login"
+            }).when("/command",{
+                 controller: "CommandController",
+                templateUrl: "./app/command/commandTemplate.html",
+                controllerAs: "command"
+            });
             /**
              * Default to the realtime page by default.
              **/
-            $routeProvider.otherwise({ redirectTo: "/realtime" });
+            $routeProvider.otherwise({ redirectTo: "/login" });
         };
         Routes.$inject = ["$routeProvider"];
         return Routes;

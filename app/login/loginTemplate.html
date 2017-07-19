@@ -1,0 +1,64 @@
+﻿<div class="flex layout vertical" style="padding: 0; overflow-y:visible; height:90vh; background-color:#1372B8">
+			<px-card-container setvertical="(max-width: 1600px)" horizontal style="height:100%" ng-controller="Login">
+			<div ng-init="init()" class="px-center-div">
+			<form ng-submit="login()">
+			<div class="row">
+			<div class="col"> <h1>PowerXpert White BBB App</h1> </div>
+			</div>
+			<div class="row">
+				<div class="col" >  <p class="px-login-error" ng-if="hasError"><i class="material-icons" style="color:white;font-size:18px;">&#xe002;</i> {{loginmessage}}</p> </div>
+			</div>
+			<div class="row">
+				<div class="col"> <p class="px-input-label">Username</p> </div>
+			</div>
+			<div class="row">
+				<div class="col">    <input type="text" value="" placeholder="" ng-model="username" class="px-input input-lg"
+											name=""> </div>
+			</div>
+
+			<div class="row">
+				<div class="col">  <p class="px-input-label">Password
+			</p> 
+			</div>
+			</div>
+
+			<div class="row">
+				<div class="col">  <input type="password" value="" placeholder="" ng-model="password" class="px-input input-lg"
+											name=""></div>
+			</div>
+
+			<div class="row">
+				<div class="col"> <button ng-click="login()"  class="px-login-button btn-block btn btn-" type="submit">
+												Log In
+			</button> 
+			</div>
+			</div>                
+		</form>		
+		
+		</div>
+		</px-card-container>
+	</div>
+	<div class="px-footer px-black">
+	
+	<div class="px-black logo col-xs-6" style="width: 10%;height: 100%;">
+		
+	
+	</div>
+	
+	<div class="px-black logo col-xs-6" style="width: 33%;height: 100%; text-align:-webkit-right;">
+		
+	<div ng-include ="'../../assets/images/eaton-full.svg'" style="padding-top:6px;width:200px;height:50px;"></div>
+	
+	</div>
+	
+	<div class="px-black logo col-xs-6" style="width: 10%;height: 100%;">
+	</div>
+	<div class="px-black logo col-xs-6" style="width: 33%;height: 100%;">
+	<p class="px-footer-title">PowerXpert White BBB App<sup>TM</sup></p><p class="px-footer-subtitle">© Copyright 2017 Eaton. All rights Resevred.</p>
+	</div>
+	<div class="px-black logo col-xs-6" style="width: 10%;height: 100%;">
+	</div>
+	
+	</div>
+
+
