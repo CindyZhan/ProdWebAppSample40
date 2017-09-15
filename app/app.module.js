@@ -25,7 +25,7 @@
         },{
              tag:'596',lname:'Percent of Full Load'
         }],
-        WEB_URL: 'https://prodiotwebapi.cloudapp.net',
+        WEB_URL: 'https://prodiotwebapi.eaton.com',
         APP_ID:'b3dfadc4-2002-46a5-96ce-a6b4a6720613',
         REAL_TIME_REFRESH: 5000,
         SLIDER_CHANNEL_TAG: "596",
