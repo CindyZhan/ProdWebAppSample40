@@ -15,9 +15,9 @@ function ($http, APP_CONSTANT,$cookies,$q,$timeout,$location,$window){
             var url = service_url + "/api/v1/security/token";
             var appId = APP_CONSTANT.APP_ID;
             $http({
-                method: 'GET',
+                method: 'POST',
                 url: url,
-                params: {
+                data: {
                     user: username,
                     password: password,
                     applicationId: appId
